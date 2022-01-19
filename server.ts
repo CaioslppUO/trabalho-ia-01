@@ -5,7 +5,7 @@ let express = require("express")
 let bodyParser = require("body-parser")
 let cors = require("cors");
 
-import { read_entry_file } from "./src/file";
+import { process_entry_file } from "./src/file";
 
 const app = express();
 const jsonParser = bodyParser.json();
@@ -26,9 +26,7 @@ app.get("/", jsonParser, (req, res) => {
  * Rota para leitura do arquivo de entrada.
  */
 app.get("/read-file", jsonParser, (req, res) => {
-    read_entry_file(req.body.file_path).then((response) => {
-        return res.status(200).send(response);
-    })
+    return res.status(200).send(process_entry_file(req.body.file_content));
 })
 
 /**
