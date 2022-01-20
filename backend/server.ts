@@ -25,7 +25,7 @@ app.get("/", jsonParser, (req, res) => {
 /**
  * Rota para leitura do arquivo de entrada.
  */
-app.get("/read-file", jsonParser, (req, res) => {
+app.post("/read-file", jsonParser, (req, res) => {
     return res.status(200).send(process_entry_file(req.body.file_content));
 })
 
