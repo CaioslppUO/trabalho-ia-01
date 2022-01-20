@@ -1,6 +1,7 @@
 import React from "react";
 import { Home } from "./components/Home";
 import { Flex } from "@chakra-ui/react";
+import { Menu } from "./components/Menu";
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
         w="100vw"
         h="100vh"
       >
-        <Home />
+        <Menu />
       </Flex>
     </div>
   );

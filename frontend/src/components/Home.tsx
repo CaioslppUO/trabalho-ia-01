@@ -13,7 +13,7 @@ export const Home = () => {
         onChange={(e) => {
           console.log("File selected");
           if (e.target.files !== null) {
-            console.log(e.target.files[0]);
+            const fileContent = e.target.files[0].text;
           }
         }}
         ref={inputRef}
