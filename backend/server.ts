@@ -26,7 +26,12 @@ app.get("/", jsonParser, (req, res) => {
  * Rota para leitura do arquivo de entrada.
  */
 app.post("/read-file", jsonParser, (req, res) => {
-    return res.status(200).send(process_entry_file(req.body.file_content));
+    try {
+        return res.status(200).send(process_entry_file(req.body.file_content));
+    } catch (error) {
+        console.log(error);
+        return res.status(400);
+    }
 })
 
 /**
