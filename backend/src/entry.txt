@@ -1,2 +1,0 @@
-pode_ir(a, b, 100).
-pode_ir(a, c, 80).
