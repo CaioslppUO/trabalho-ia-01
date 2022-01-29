@@ -1,4 +1,5 @@
 import { Map, Route } from "./map";
+let fs = require("fs");
 
 /**
  * Realiza o processamento do arquivo de entrada para o programa, separando as variáveis de entrada e as alocando em uma estrutura.
@@ -11,9 +12,9 @@ export const process_entry_file = (content: string): Map => {
     let routes: Array<Route> = [];
     for(let line in lines) {
         if(lines[line].length != 0) {
-            let start_point, end_point, distance;
-            start_point = String(lines[line].split("(")[1].split(",")[0]);
-            end_point = String(lines[line].split(",")[1]);
+            let start_point: string, end_point: string, distance: number;
+            start_point = String(lines[line].split("(")[1].split(",")[0]).replace(/\s/g, '');
+            end_point = String(lines[line].split(",")[1]).replace(/\s/g, '');
             distance = Number(lines[line].split("(")[1].split(")")[0].split(",")[2]);
             routes.push(Route(start_point,end_point,distance));
             if(!available_points.includes(start_point)) available_points.push(start_point);
@@ -22,3 +23,11 @@ export const process_entry_file = (content: string): Map => {
     }
     return Map(available_points, routes);
 }
+
+fs.readFile('./entry.txt', 'utf8' , (err, data) => {
+    if (err) {
+      console.error(err)
+      return
+    }
+    console.log(process_entry_file(data));
+  })
