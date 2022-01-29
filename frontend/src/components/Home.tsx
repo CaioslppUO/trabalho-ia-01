@@ -31,6 +31,9 @@ export const Home = () => {
                   .catch((e) => {
                     console.log("Error in file upload", e);
                     toast.error("Erro ao selecionar arquivo");
+                  })
+                  .finally(() => {
+                    e.target.value = "";
                   });
               }
             };
