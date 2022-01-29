@@ -1,5 +1,4 @@
 import { Map, Route } from "./map";
-let fs = require("fs");
 
 /**
  * Realiza o processamento do arquivo de entrada para o programa, separando as variáveis de entrada e as alocando em uma estrutura.
@@ -23,11 +22,3 @@ export const process_entry_file = (content: string): Map => {
     }
     return Map(available_points, routes);
 }
-
-fs.readFile('./entry.txt', 'utf8' , (err, data) => {
-    if (err) {
-      console.error(err)
-      return
-    }
-    console.log(process_entry_file(data));
-  })
