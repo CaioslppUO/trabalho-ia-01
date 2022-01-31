@@ -1,14 +1,14 @@
 import { Box } from "@chakra-ui/react";
 import { useD3 } from "../hooks/useD3";
 import * as d3 from "d3";
-import { useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { MainContext } from "../contexts/Main";
 
 type NodeProps = {
   name: string;
   color: string;
   x: number;
   y: number;
-  value: number;
 };
 
 type LinkProps = {
@@ -36,13 +36,38 @@ export type GraphProps = {
   links: LinkProps[];
 };
 
-export type CanvasProps = {
-  graph: GraphProps;
+var graph: GraphProps = {
+  nodes: [{ name: "A", color: "#3d3d3d", x: 0, y: 0 }],
+  links: [],
 };
 
-export const Canvas = ({ graph }: CanvasProps) => {
+export const Canvas = () => {
+  const { MainGraph } = useContext(MainContext);
   const a = useRef<HTMLCanvasElement>(null);
   const [data, setData] = useState(graph);
+
+  useEffect(() => {
+    if (typeof MainGraph !== "undefined") {
+      const value: GraphProps = {
+        nodes: MainGraph.available_points.map((n) => ({
+          name: n,
+          color: "#3d3d3d",
+          x: 0,
+          y: 0,
+        })),
+        links: MainGraph.routes.map((r) => ({
+          source: r.start_point,
+          target: r.end_point,
+          color: "gray",
+          distance: r.distance,
+        })),
+      };
+
+      console.log(value);
+
+      setData(value);
+    }
+  }, [MainGraph]);
 
   function fun() {
     // data.links[0].color = "red";
@@ -146,8 +171,20 @@ export const Canvas = ({ graph }: CanvasProps) => {
           Math.abs(l.target.y + l.source.y) / 2
         );
       }
+
+      // function canvas_arrow(context, fromx, fromy, tox, toy) {
+      //   var headlen = 10; // length of head in pixels
+      //   var dx = tox - fromx;
+      //   var dy = toy - fromy;
+      //   var angle = Math.atan2(dy, dx);
+      //   context.moveTo(fromx, fromy);
+      //   context.lineTo(tox, toy);
+      //   context.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+      //   context.moveTo(tox, toy);
+      //   context.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+      // }
     },
-    [graph.nodes.length]
+    [data.nodes.length]
   );
 
   return (

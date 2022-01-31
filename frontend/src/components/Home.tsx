@@ -1,10 +1,13 @@
 import { Flex, Button, Input, Heading } from "@chakra-ui/react";
-import { useRef } from "react";
+import { useContext, useRef } from "react";
 import toast from "react-hot-toast";
+import { MainContext } from "../contexts/Main";
 import api from "../services/api";
 
 export const Home = () => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const { setMainGraph, setTab } = useContext(MainContext);
+
   return (
     <Flex alignItems="center" flexDirection="column">
       <Heading marginBottom="30px">
@@ -27,6 +30,8 @@ export const Home = () => {
                     console.log("File uploaded");
                     toast.success("Arquivo selecionado com sucesso!");
                     console.log(r.data);
+                    setMainGraph(r.data);
+                    setTab(2);
                   })
                   .catch((e) => {
                     console.log("Error in file upload", e);
