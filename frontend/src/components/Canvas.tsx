@@ -83,7 +83,7 @@ export const Canvas = () => {
       var width = canvas.attr("width");
       var height = canvas.attr("height");
       var ctx = canvas.node().getContext("2d");
-      var r = 20;
+      var r = 10;
       var simulation = d3
         .forceSimulation(data.nodes)
         .force("x", d3.forceX(width / 2))
@@ -97,7 +97,7 @@ export const Canvas = () => {
             .forceLink(data.links)
             // @ts-ignore
             .id((i) => i.name)
-            .distance((i) => i.distance)
+            .distance((i) => 200)
             .strength(1)
         );
 
@@ -158,7 +158,7 @@ export const Canvas = () => {
       function drawLink(l: DrawLinkProps) {
         ctx.beginPath();
         ctx.strokeStyle = l.color;
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 2;
         ctx.moveTo(l.source.x, l.source.y);
         var c = Math.abs(l.target.x - l.source.x);
         var b = Math.abs(l.target.y - l.source.y);
@@ -211,11 +211,11 @@ export const Canvas = () => {
 
         canvas_arrow(ctx, l.source.x, l.source.y, xReal, yReal);
 
-        ctx.moveTo(l.source.x, l.source.y);
-        ctx.lineTo(l.target.x, l.source.y);
+        // ctx.moveTo(l.source.x, l.source.y);
+        // ctx.lineTo(l.target.x, l.source.y);
 
-        ctx.moveTo(l.target.x, l.target.y);
-        ctx.lineTo(l.target.x, l.source.y);
+        // ctx.moveTo(l.target.x, l.target.y);
+        // ctx.lineTo(l.target.x, l.source.y);
 
         ctx.stroke();
         ctx.font = "10px serif";
@@ -234,7 +234,7 @@ export const Canvas = () => {
         tox: any,
         toy: any
       ) {
-        var headlen = 50; // length of head in pixels
+        var headlen = 10; // length of head in pixels
         var dx = tox - fromx;
         var dy = toy - fromy;
         var angle = Math.atan2(dy, dx);

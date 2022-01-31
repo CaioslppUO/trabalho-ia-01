@@ -1,1 +1,5 @@
-pode_ir(A, B, 520).
+pode_ir(A, B, 120).
+pode_ir(A, C, 250).
+pode_ir(A, D, 1000).
+pode_ir(B, C, 400).
+pode_ir(B, D, 160).
