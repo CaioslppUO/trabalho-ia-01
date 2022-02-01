@@ -51,7 +51,7 @@ export const Canvas = () => {
       const value: GraphProps = {
         nodes: MainGraph.available_points.map((n) => ({
           name: n,
-          color: "#3d3d3d",
+          color: "purple",
           x: 0,
           y: 0,
         })),
@@ -83,13 +83,13 @@ export const Canvas = () => {
       var width = canvas.attr("width");
       var height = canvas.attr("height");
       var ctx = canvas.node().getContext("2d");
-      var r = 10;
+      var r = 13;
       var simulation = d3
         .forceSimulation(data.nodes)
         .force("x", d3.forceX(width / 2))
         .force("y", d3.forceY(height / 2))
         .force("collide", d3.forceCollide(r + 1))
-        .force("charge", d3.forceManyBody().strength(-150))
+        .force("charge", d3.forceManyBody().strength(-1900))
         .on("tick", update)
         .force(
           "link",
@@ -97,7 +97,7 @@ export const Canvas = () => {
             .forceLink(data.links)
             // @ts-ignore
             .id((i) => i.name)
-            .distance((i) => 200)
+            .distance((i) => 100)
             .strength(1)
         );
 
@@ -132,6 +132,23 @@ export const Canvas = () => {
       );
 
       function update() {
+        data.nodes.forEach((element: any) => {
+          if (element.x - r < 0) {
+            element.x = r;
+          }
+
+          if (element.y - r < 0) {
+            element.y = r;
+          }
+
+          if (width && element.x + r > width) {
+            element.x = width - r;
+          }
+
+          if (height && element.y + r > height) {
+            element.y = height - r;
+          }
+        });
         ctx.clearRect(0, 0, width, height);
 
         data.links.forEach((element) => {
@@ -151,14 +168,16 @@ export const Canvas = () => {
         ctx.arc(d.x, d.y, r, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.font = "15px serif";
+        ctx.font = "20px Arial bold";
+
         ctx.fillText(d.name, d.x + r, d.y + r);
       }
 
       function drawLink(l: DrawLinkProps) {
+        console.log(l);
         ctx.beginPath();
         ctx.strokeStyle = l.color;
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 3;
         ctx.moveTo(l.source.x, l.source.y);
         var c = Math.abs(l.target.x - l.source.x);
         var b = Math.abs(l.target.y - l.source.y);
@@ -169,8 +188,8 @@ export const Canvas = () => {
 
         var betha = 90 - alph;
 
-        var yDislocationReal = Math.sin(alph) * r;
-        var xDislocationReal = Math.cos(alph) * r;
+        var xDislocationReal = Math.sin(betha) * r;
+        var yDislocationReal = Math.cos(betha) * r;
         var xReal = 0;
         var yReal = 0;
 
@@ -204,12 +223,31 @@ export const Canvas = () => {
           }
         }
 
-        console.log(alph);
+        console.log("a:", alph);
+        console.log("b:", betha);
 
-        console.log("yReal: ", yDislocationReal);
         // console.log("y: ", yReal);
 
-        canvas_arrow(ctx, l.source.x, l.source.y, xReal, yReal);
+        // canvas_arrow(ctx, l.source.x, l.source.y, xReal, l.target.y);
+
+        var mX = Math.abs(l.target.x + l.source.x) / 2;
+        var mY = Math.abs(l.target.y + l.source.y) / 2;
+
+        mX = Math.abs(l.target.x + mX) / 2;
+        mY = Math.abs(l.target.y + mY) / 2;
+        ctx.moveTo(l.source.x, l.source.y);
+        // canvas_arrow(ctx, l.source.x, l.source.y, mX, mY);
+
+        mX = Math.abs(l.target.x + l.source.x) / 2;
+        mY = Math.abs(l.target.y + l.source.y) / 2;
+
+        var mX2 = Math.abs(mX + l.source.x) / 2;
+        var mY2 = Math.abs(mY + l.source.y) / 2;
+        ctx.moveTo(mX, mY);
+        canvas_arrow(ctx, mX, mY, mX2, mY2);
+
+        ctx.moveTo(l.source.x, l.source.y);
+        ctx.lineTo(l.target.x, l.target.y);
 
         // ctx.moveTo(l.source.x, l.source.y);
         // ctx.lineTo(l.target.x, l.source.y);
@@ -218,12 +256,12 @@ export const Canvas = () => {
         // ctx.lineTo(l.target.x, l.source.y);
 
         ctx.stroke();
-        ctx.font = "10px serif";
+        ctx.font = "10px arial bold";
         ctx.fillStyle = "purple";
         ctx.fillText(
           l.distance,
-          Math.abs(l.target.x + l.source.x) / 2,
-          Math.abs(l.target.y + l.source.y) / 2
+          Math.abs(l.target.x + l.source.x) / 2 + 10,
+          Math.abs(l.target.y + l.source.y) / 2 + 10
         );
       }
 
@@ -255,9 +293,17 @@ export const Canvas = () => {
   );
 
   return (
-    <Box width="1000px" height="500px" border="2px solid gray">
-      <canvas ref={ref} id="network" width="1000" height="500"></canvas>
-      <button onClick={fun}>Fun</button>
+    <Box width="1000px" height="500px">
+      <canvas
+        style={{
+          boxShadow:
+            " rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px",
+        }}
+        ref={ref}
+        id="network"
+        width="1000"
+        height="500"
+      ></canvas>
     </Box>
   );
 };
