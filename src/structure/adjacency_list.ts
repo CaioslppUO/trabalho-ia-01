@@ -24,7 +24,7 @@ export const GraphEdge = (dstVertex: string, weight: number): GraphEdge => {
 /**
  * Representa a distância euclidiana de um vértice qualquer para o vértice dstVertex.
  */
-interface EuclideanDistance {
+export interface EuclideanDistance {
     dstVertex: string;
     euclidean_distance: number;
 }
@@ -35,7 +35,7 @@ interface EuclideanDistance {
  * @param distance Distância em linha reta entre a origem e o destino.
  * @returns Objeto do tipo EuclideanDistance que representa a distância euclidiana entre um vértice qualquer e o vértice dstVertex.
  */
-const EuclideanDistance = (dstVertex: string, euclidean_distance: number): EuclideanDistance => {
+export const EuclideanDistance = (dstVertex: string, euclidean_distance: number): EuclideanDistance => {
     return {
         dstVertex,
         euclidean_distance
@@ -103,7 +103,7 @@ export interface Graph {
      * @param vertexName Nome do vértice para procurar.
      * @returns Vértice encontrado e suas arestas ou undefined caso não encontre.
      */
-    getVertexEdges: (vertexName: string) => AdjacencyListItem;
+    getVertex: (vertexName: string) => AdjacencyListItem;
     /**
      * Imprime o grafo no terminal em formato JSON.
      */
@@ -141,7 +141,7 @@ export const Graph = (vertices: Array<Vertex>): Graph => {
      * @param vertexName Nome do vértice para procurar.
      * @returns Vértice encontrado e suas arestas ou undefined caso não encontre.
      */
-    const getVertexEdges = (vertexName: string): AdjacencyListItem => {
+    const getVertex = (vertexName: string): AdjacencyListItem => {
         for(let adjItem in adjList) {
             if(adjList[adjItem].vertexName === vertexName) return adjList[adjItem];
         }
@@ -158,36 +158,37 @@ export const Graph = (vertices: Array<Vertex>): Graph => {
     return {
         graph: adjList,
         insert,
-        getVertexEdges,
+        getVertex,
         show
     }
 }
 
-let vertices = [
-    Vertex(
-        "a",
-        [
-            EuclideanDistance("b", 70),
-            EuclideanDistance("c", 50)
-        ]
-    ),
-    Vertex(
-        "b",
-        [
-            EuclideanDistance("a", 70),
-            EuclideanDistance("c", 40)
-        ]
-    ),
-    Vertex(
-        "c",
-        [
-            EuclideanDistance("a", 50),
-            EuclideanDistance("b", 40)
-        ]
-    )
-]
-let graph = Graph(vertices);
-graph.insert("a", "b", 100);
-graph.insert("a", "c", 80);
-//console.log(graph.getVertexEdges("a"));
-graph.show();
+// Exemplo de uso
+// let vertices = [
+//     Vertex(
+//         "a",
+//         [
+//             EuclideanDistance("b", 70),
+//             EuclideanDistance("c", 50)
+//         ]
+//     ),
+//     Vertex(
+//         "b",
+//         [
+//             EuclideanDistance("a", 70),
+//             EuclideanDistance("c", 40)
+//         ]
+//     ),
+//     Vertex(
+//         "c",
+//         [
+//             EuclideanDistance("a", 50),
+//             EuclideanDistance("b", 40)
+//         ]
+//     )
+// ]
+// let graph = Graph(vertices);
+// graph.insert("a", "b", 100);
+// graph.insert("a", "c", 80);
+// console.log(graph.getVertex("a"));
+// graph.show();
