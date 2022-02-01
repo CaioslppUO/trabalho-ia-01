@@ -179,56 +179,64 @@ export const Canvas = () => {
         ctx.strokeStyle = l.color;
         ctx.lineWidth = 3;
         ctx.moveTo(l.source.x, l.source.y);
+
+        var x0 = l.source.x,
+          y0 = l.source.y,
+          x1 = l.target.x,
+          y1 = l.target.y;
         var c = Math.abs(l.target.x - l.source.x);
         var b = Math.abs(l.target.y - l.source.y);
 
-        var a = Math.sqrt(b * b + c * c);
+        var vX = x1 - x0;
+        var vY = y1 - y0;
+        var t = 1 - r / Math.sqrt(b * b + c * c);
 
-        var alph = (Math.asin(b / a) * 180) / Math.PI;
+        var rX = x0 + t * vX;
+        var rY = y0 + t * vY;
 
-        var betha = 90 - alph;
+        // var a = Math.sqrt(b * b + c * c);
 
-        var xDislocationReal = Math.sin(betha) * r;
-        var yDislocationReal = Math.cos(betha) * r;
-        var xReal = 0;
-        var yReal = 0;
+        // var alph = (Math.asin(b / a) * 180) / Math.PI;
 
-        if (l.target.x > l.source.x) {
-          //origem esquerda
+        // var betha = 90 - alph;
 
-          if (xDislocationReal < 0) {
-            xReal = l.target.x + xDislocationReal;
-          } else {
-            xReal = l.target.x - xDislocationReal;
-          }
+        // var xDislocationReal = Math.sin(betha) * r;
+        // var yDislocationReal = Math.cos(betha) * r;
+        // var xReal = 0;
+        // var yReal = 0;
 
-          if (yDislocationReal > 0) {
-            yReal = l.target.y + yDislocationReal;
-          } else {
-            yReal = l.target.y - yDislocationReal;
-          }
-        } else {
-          //origem direita
+        // if (l.target.x > l.source.x) {
+        //   //origem esquerda
 
-          if (xDislocationReal >= 0) {
-            xReal = l.target.x + xDislocationReal;
-          } else {
-            xReal = l.target.x - xDislocationReal;
-          }
+        //   if (xDislocationReal < 0) {
+        //     xReal = l.target.x + xDislocationReal;
+        //   } else {
+        //     xReal = l.target.x - xDislocationReal;
+        //   }
 
-          if (yDislocationReal <= 0) {
-            yReal = l.target.y + yDislocationReal;
-          } else {
-            yReal = l.target.y - yDislocationReal;
-          }
-        }
+        //   if (yDislocationReal > 0) {
+        //     yReal = l.target.y + yDislocationReal;
+        //   } else {
+        //     yReal = l.target.y - yDislocationReal;
+        //   }
+        // } else {
+        //   //origem direita
 
-        console.log("a:", alph);
-        console.log("b:", betha);
+        //   if (xDislocationReal >= 0) {
+        //     xReal = l.target.x + xDislocationReal;
+        //   } else {
+        //     xReal = l.target.x - xDislocationReal;
+        //   }
 
-        // console.log("y: ", yReal);
+        //   if (yDislocationReal <= 0) {
+        //     yReal = l.target.y + yDislocationReal;
+        //   } else {
+        //     yReal = l.target.y - yDislocationReal;
+        //   }
+        // }
 
-        // canvas_arrow(ctx, l.source.x, l.source.y, xReal, l.target.y);
+        // console.log("a:", alph);
+        // console.log("b:", betha);
 
         var mX = Math.abs(l.target.x + l.source.x) / 2;
         var mY = Math.abs(l.target.y + l.source.y) / 2;
@@ -244,10 +252,10 @@ export const Canvas = () => {
         var mX2 = Math.abs(mX + l.source.x) / 2;
         var mY2 = Math.abs(mY + l.source.y) / 2;
         ctx.moveTo(mX, mY);
-        canvas_arrow(ctx, mX, mY, mX2, mY2);
+        //canvas_arrow(ctx, mX, mY, mX2, mY2);
 
         ctx.moveTo(l.source.x, l.source.y);
-        ctx.lineTo(l.target.x, l.target.y);
+        canvas_arrow(ctx, l.source.x, l.source.y, rX, rY);
 
         // ctx.moveTo(l.source.x, l.source.y);
         // ctx.lineTo(l.target.x, l.source.y);
