@@ -27,5 +27,7 @@ const containerStyle: FlexProps = {
   justifyContent: "center",
   flexDirection: "column",
   w: "100vw",
+  maxWidth: "1920px",
+  marginX: "auto",
   h: "100vh",
 };

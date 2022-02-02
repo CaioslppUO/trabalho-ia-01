@@ -1,7 +1,9 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { useD3 } from "../../hooks/useD3";
 import * as d3 from "d3";
+import { useState } from "react";
 import { GraphProps } from "./canvasTypes/types";
+import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import {
   drawNode,
   drawLink,
@@ -12,21 +14,23 @@ import {
 } from "./graphControl/graphInterfaceControl";
 
 var graph: GraphProps = {
-  nodes: [{ name: "A", color: "#3d3d3d", x: 0, y: 0 }],
-  links: [],
-};
-
-export type CanvasProps = {
-  data?: GraphProps;
+  nodes: [
+    { name: "A", color: "#3d3d3d", x: 0, y: 0 },
+    { name: "B", color: "#3d3d3d", x: 0, y: 0 },
+  ],
+  links: [{ source: "A", target: "B", color: "red", distance: 100 }],
 };
 
 /**
  * Componente que imprime na tela uma representação de grafos em canvas
  * @returns React component
  */
-export const Canvas = ({ data = graph }: CanvasProps) => {
+export const Canvas = () => {
+  const [data, setData] = useState(graph);
+  const [updateGraph, setUpdateGraph] = useState(Date.now());
+
   const ref = useD3(
-    (canvas) => {
+    (canvas: any) => {
       data.nodes.forEach((n) => {
         n.x = Math.random() * width;
         n.y = Math.random() * height;
@@ -61,12 +65,12 @@ export const Canvas = ({ data = graph }: CanvasProps) => {
           })
           .on("start", (event) => onStartDrag(event, simulation))
           .on("drag", (event) => onDrag(event, width, height))
-          .on("end", (event) => () => onDragEnd(event, simulation))
+          .on("end", (event, d: any) => onDragEnd(event, simulation))
       );
 
       function update() {
-        checkCollision(data.nodes, r, width, height);
         ctx.clearRect(0, 0, width, height);
+        data.nodes.forEach((e) => checkCollision(e, r, width, height));
 
         data.links.forEach((element) => {
           drawLink(ctx, element as any, r);
@@ -77,19 +81,67 @@ export const Canvas = ({ data = graph }: CanvasProps) => {
         });
       }
     },
-    [data.nodes.length]
+    [updateGraph]
   );
 
   return (
-    <Box width="1000px" height="500px">
-      <canvas
-        ref={ref}
-        style={canvasStyle}
-        id="network"
-        width="1000"
-        height="500"
-      ></canvas>
-    </Box>
+    <Flex>
+      <Box>
+        <canvas
+          style={canvasStyle}
+          ref={ref}
+          id="network"
+          width="900"
+          height="500"
+        ></canvas>
+      </Box>
+      <Flex marginLeft="30px" overflowY="scroll" width="300px" height="500px">
+        <Table variant="simple">
+          <Thead>
+            <Tr>
+              <Th>De</Th>
+              <Th>Dara</Th>
+              <Th isNumeric>Distância</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            <Tr>
+              <Td>A</Td>
+              <Td>B</Td>
+              <Td isNumeric>25.4</Td>
+            </Tr>
+            <Tr>
+              <Td>A</Td>
+              <Td>B</Td>
+              <Td isNumeric>25.4</Td>
+            </Tr>
+            <Tr>
+              <Td>A</Td>
+              <Td>B</Td>
+              <Td isNumeric>25.4</Td>
+            </Tr>
+
+            <Tr>
+              <Td>A</Td>
+              <Td>B</Td>
+              <Td isNumeric>25.4</Td>
+            </Tr>
+
+            <Tr>
+              <Td>A</Td>
+              <Td>B</Td>
+              <Td isNumeric>25.4</Td>
+            </Tr>
+
+            <Tr>
+              <Td>A</Td>
+              <Td>B</Td>
+              <Td isNumeric>25.4</Td>
+            </Tr>
+          </Tbody>
+        </Table>
+      </Flex>
+    </Flex>
   );
 };
 

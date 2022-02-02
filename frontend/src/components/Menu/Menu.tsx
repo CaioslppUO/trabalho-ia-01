@@ -14,7 +14,12 @@ export const Menu = () => {
   const [file2, setFile2] = useState<string | ArrayBuffer>("");
 
   return (
-    <Flex alignItems="center" flexDirection="column">
+    <Flex
+      maxWidth="1920px"
+      marginX="auto"
+      alignItems="center"
+      flexDirection="column"
+    >
       {tab !== 0 && <ArrowBack onClick={() => setTab(0)} />}
       {tab === 0 && (
         <FileSelector

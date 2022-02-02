@@ -79,7 +79,7 @@ export function drawLink(ctx: any, l: DrawLinkProps, r: number) {
  * @param tox -> x final
  * @param toy -> y final
  */
-function canvas_arrow(
+export function canvas_arrow(
   context: any,
   fromx: any,
   fromy: any,
@@ -111,28 +111,26 @@ function canvas_arrow(
  * @param height -> Altura do canvas
  */
 export function checkCollision(
-  v: Array<NodeProps>,
+  element: NodeProps,
   r: number,
   width: number,
   height: number
 ) {
-  v.forEach((element: any) => {
-    if (element.x - r < 0) {
-      element.x = r;
-    }
+  if (element.x - r < 0) {
+    element.x = r;
+  }
 
-    if (element.y - r < 0) {
-      element.y = r;
-    }
+  if (element.y - r < 0) {
+    element.y = r;
+  }
 
-    if (width && element.x + r > width) {
-      element.x = width - r;
-    }
+  if (width && element.x + r > width) {
+    element.x = width - r;
+  }
 
-    if (height && element.y + r > height) {
-      element.y = height - r;
-    }
-  });
+  if (height && element.y + r >= height) {
+    element.y = height - r;
+  }
 }
 
 /**

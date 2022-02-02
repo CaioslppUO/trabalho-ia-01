@@ -23,7 +23,7 @@ export type MainObject = {
 export const MainContext = createContext({} as MainObject);
 
 export function MainContextProvider(props: ComponentProps) {
-  const [tab, setTab] = useState(0);
+  const [tab, setTab] = useState(3);
   const [MainGraph, setMainGraph] = useState<MainGraph>({
     available_points: [],
     routes: [],
