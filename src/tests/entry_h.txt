@@ -1,0 +1,6 @@
+dist_euclidiana(a, b, 60)
+dist_euclidiana(a, c, 90)
+dist_euclidiana(a, d, 250)
+dist_euclidiana(b, c, 70)
+dist_euclidiana(b, d, 130)
+dist_euclidiana(c, d, 120)

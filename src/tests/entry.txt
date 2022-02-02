@@ -1,0 +1,3 @@
+pode_ir(a, b, 100)
+pode_ir(b, c, 120)
+pode_ir(c, d, 230)
