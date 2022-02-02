@@ -177,6 +177,6 @@ fs.readFile('/home/caioslpp/git/trabalho-ia-01/examples/entry.txt', 'utf8' , (er
           return
         }
         let graph = process_entry_file(data, data_2);
-        let a = a_star(graph).run("b","d");
+        let a = a_star(graph).run("a","f");
     })
 })

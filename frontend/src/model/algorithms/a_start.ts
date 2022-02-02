@@ -184,8 +184,7 @@ export const a_star = (graph: Graph): AStar => {
             let next = get_vertex_with_lowers_cost(priority_queue);
             if(next == end_vertex) {
                 console.log(prep.path);
-                console.log("aaaa");
-                break;
+                return;
             };
             priority_queue = priority_queue.filter((element) => {
                 return !(element.vertex===next);
@@ -216,6 +215,7 @@ export const a_star = (graph: Graph): AStar => {
             }
         }
         console.log("Caminho não encontrado");
+        return;
     }
 
     return {
