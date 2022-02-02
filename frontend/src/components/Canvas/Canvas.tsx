@@ -1,7 +1,7 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { useD3 } from "../../hooks/useD3";
 import * as d3 from "d3";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { GraphProps } from "./canvasTypes/types";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import {
@@ -12,6 +12,7 @@ import {
   onDrag,
   onDragEnd,
 } from "./graphControl/graphInterfaceControl";
+import { MainContext } from "../../contexts/Main";
 
 var graph: GraphProps = {
   nodes: [
@@ -21,13 +22,68 @@ var graph: GraphProps = {
   links: [{ source: "A", target: "B", color: "red", distance: 100 }],
 };
 
+type TableLineProps = {
+  column1: string;
+  column2: string;
+  column3: number;
+};
+
 /**
  * Componente que imprime na tela uma representação de grafos em canvas
  * @returns React component
  */
 export const Canvas = () => {
+  const { MainGraph } = useContext(MainContext);
   const [data, setData] = useState(graph);
+  const [tableData, setTableData] = useState<Array<TableLineProps>>([]);
   const [updateGraph, setUpdateGraph] = useState(Date.now());
+
+  useEffect(() => {
+    console.log(MainGraph);
+    if (typeof MainGraph !== undefined && MainGraph.graph) {
+      const g = MainGraph.graph;
+      const newData: GraphProps = {
+        nodes: [],
+        links: [],
+      };
+
+      const newTableData: TableLineProps[] = [];
+
+      g.forEach((i) => {
+        newData.nodes.push({
+          name: i.vertex.name,
+          color: "purple",
+          x: 0,
+          y: 0,
+        });
+      });
+
+      g.forEach((i) => {
+        i.edges.list.forEach((j) => {
+          newData.links.push({
+            source: i.vertex.name,
+            target: j.dstVertex,
+            color: "gray",
+            distance: j.weight,
+          });
+        });
+      });
+
+      g.forEach((i) => {
+        i.vertex.distances.forEach((j) => {
+          newTableData.push({
+            column1: i.vertex.name,
+            column2: j.dstVertex,
+            column3: j.euclidean_distance,
+          });
+        });
+      });
+
+      setTableData(newTableData);
+
+      setData(newData);
+    }
+  }, [MainGraph]);
 
   const ref = useD3(
     (canvas: any) => {
@@ -81,7 +137,7 @@ export const Canvas = () => {
         });
       }
     },
-    [updateGraph]
+    [data]
   );
 
   return (
@@ -105,39 +161,14 @@ export const Canvas = () => {
             </Tr>
           </Thead>
           <Tbody>
-            <Tr>
-              <Td>A</Td>
-              <Td>B</Td>
-              <Td isNumeric>25.4</Td>
-            </Tr>
-            <Tr>
-              <Td>A</Td>
-              <Td>B</Td>
-              <Td isNumeric>25.4</Td>
-            </Tr>
-            <Tr>
-              <Td>A</Td>
-              <Td>B</Td>
-              <Td isNumeric>25.4</Td>
-            </Tr>
-
-            <Tr>
-              <Td>A</Td>
-              <Td>B</Td>
-              <Td isNumeric>25.4</Td>
-            </Tr>
-
-            <Tr>
-              <Td>A</Td>
-              <Td>B</Td>
-              <Td isNumeric>25.4</Td>
-            </Tr>
-
-            <Tr>
-              <Td>A</Td>
-              <Td>B</Td>
-              <Td isNumeric>25.4</Td>
-            </Tr>
+            {tableData &&
+              tableData.map((i) => (
+                <Tr>
+                  <Td>{i.column1}</Td>
+                  <Td>{i.column2}</Td>
+                  <Td isNumeric>{i.column3}</Td>
+                </Tr>
+              ))}
           </Tbody>
         </Table>
       </Flex>

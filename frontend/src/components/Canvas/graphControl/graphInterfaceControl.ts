@@ -26,7 +26,6 @@ export function drawNode(ctx: any, d: NodeProps, r: number) {
  * @param r  -> raio do nó
  */
 export function drawLink(ctx: any, l: DrawLinkProps, r: number) {
-  console.log(l);
   ctx.beginPath();
   ctx.strokeStyle = l.color;
   ctx.lineWidth = 3;

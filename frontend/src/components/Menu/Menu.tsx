@@ -1,5 +1,6 @@
 import { Flex, Button, Input, Heading, Box } from "@chakra-ui/react";
 import { useContext, useState } from "react";
+import { useToast } from "@chakra-ui/react";
 import { IoMdArrowBack } from "react-icons/io";
 import { MainContext } from "../../contexts/Main";
 import { ArrowBack } from "../ArrowBack/Arrowback";
@@ -9,9 +10,8 @@ import { MenuItem } from "./MenuItem/MenuItem";
 import { process_entry_file } from "../../model/file";
 
 export const Menu = () => {
-  const { setTab, tab } = useContext(MainContext);
+  const { setTab, tab, setMainGraph } = useContext(MainContext);
   const [file1, setFile1] = useState<string | ArrayBuffer>("");
-  const [file2, setFile2] = useState<string | ArrayBuffer>("");
 
   return (
     <Flex
@@ -23,7 +23,7 @@ export const Menu = () => {
       {tab !== 0 && <ArrowBack onClick={() => setTab(0)} />}
       {tab === 0 && (
         <FileSelector
-          title="Selecione o arquivo de salas"
+          title="Selecione o arquivo de: Salas"
           onSelected={(data) => {
             setFile1(data);
             setTab(1);
@@ -33,11 +33,11 @@ export const Menu = () => {
 
       {tab === 1 && (
         <FileSelector
-          title="Selecione o arquivo de distâncias euclidianas"
+          title="Selecione o arquivo de: Distâncias euclidianas"
           onSelected={(data) => {
-            console.log(
-              process_entry_file(file1 as string, data as string).graph
-            );
+            setTab(3);
+            console.log(process_entry_file(file1 as string, data as string));
+            setMainGraph(process_entry_file(file1 as string, data as string));
           }}
         />
       )}

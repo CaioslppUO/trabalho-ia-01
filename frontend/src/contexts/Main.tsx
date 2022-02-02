@@ -1,33 +1,22 @@
 import { ReactNode, useState } from "react";
 import { createContext } from "react";
+import { Graph } from "../model/types/graphTypes";
 
 type ComponentProps = {
   children: ReactNode;
 };
 
-export type MainGraph = {
-  available_points: Array<string>;
-  routes: {
-    start_point: string;
-    end_point: string;
-    distance: number;
-  }[];
-};
-
 export type MainObject = {
-  MainGraph: MainGraph;
-  setMainGraph: (v: MainGraph) => void;
+  MainGraph: Graph;
+  setMainGraph: (v: Graph) => void;
   tab: number;
   setTab: (v: number) => void;
 };
 export const MainContext = createContext({} as MainObject);
 
 export function MainContextProvider(props: ComponentProps) {
-  const [tab, setTab] = useState(3);
-  const [MainGraph, setMainGraph] = useState<MainGraph>({
-    available_points: [],
-    routes: [],
-  });
+  const [tab, setTab] = useState(0);
+  const [MainGraph, setMainGraph] = useState<Graph>({} as Graph);
 
   return (
     <MainContext.Provider value={{ MainGraph, setMainGraph, tab, setTab }}>
