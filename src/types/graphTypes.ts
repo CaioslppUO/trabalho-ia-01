@@ -7,7 +7,7 @@ export interface LinkedList<T> {
 }
 
 /**
- * Representa o conteúdo de cada vértice do grafo e o peso de uma aresta de vértice em relação a outro vértice.
+ * Representa uma aresta do grafo, com um peso e um vértice de destino.
  */
  export interface GraphEdge {
     dstVertex: string;
@@ -34,9 +34,8 @@ export interface LinkedList<T> {
  * Representa um item da lista de adjacência utilizada para representar o grafo.
  */
  export interface AdjacencyListItem {
-    vertexName: string;
+    vertex: Vertex;
     edges: LinkedList<GraphEdge>;
-    distances: Array<EuclideanDistance>;
 }
 
 /**
@@ -51,7 +50,7 @@ export interface LinkedList<T> {
      * @param dstVertexName Vértice de destino da aresta.
      * @param weight Peso da aresta.
      */
-    insert: (vertexName: string, adjVertex: string, weight: number) => void;
+    insert: (srcVertexName: string, dstVertexName: string, weight: number) => void;
     /**
      * Procura um vértice pelo nome e o retorna, junto com todas as suas arestas.
      * @param vertexName Nome do vértice para procurar.
@@ -62,4 +61,72 @@ export interface LinkedList<T> {
      * Imprime o grafo no terminal em formato JSON.
      */
     show: () => void;
+}
+
+/**
+ * Cria e retorna uma lista encadeada simples.
+ * @returns 
+ */
+export const LinkedList = <T>(): LinkedList<T> => {
+    let list: Array<T> = [];
+
+    const insert = (element: T): void => {
+        list.push(element)
+    }
+
+    return {
+        list,
+        insert
+    }
+}
+
+/**
+ * Cria e retorna um objeto do tipo GraphEdge.
+ * @param dstVertex Nome do vértice de destino da aresta.
+ * @param weight Peso da aresta do vértice em relação a um outro vértice.
+ * @returns Objeto do tipo GraphEdge.
+ */
+ export const GraphEdge = (dstVertex: string, weight: number): GraphEdge => {
+    return {
+        dstVertex,
+        weight
+    }
+}
+
+/**
+ * Cria um objeto do tipo EuclideanDistance.
+ * @param dstVertex Vértice de destino.
+ * @param distance Distância em linha reta entre a origem e o destino.
+ * @returns Objeto do tipo EuclideanDistance que representa a distância euclidiana entre um vértice qualquer e o vértice dstVertex.
+ */
+ export const EuclideanDistance = (dstVertex: string, euclidean_distance: number): EuclideanDistance => {
+    return {
+        dstVertex,
+        euclidean_distance
+    }
+}
+
+/**
+ * Cria um objeto do tipo Vertex.
+ * @param name Nome do vértice.
+ * @param distances Vetor de distâncias euclidianas desse vértice para todos os outros.
+ * @returns Objeto do tipo vertex que representa um vértice do grafo.
+ */
+ export const Vertex = (name: string, distances: Array<EuclideanDistance>): Vertex => {
+    return {
+        name,
+        distances
+    }
+}
+
+/**
+ * Cria um objeto do tipo AdjacencyListItem
+ * @param vertexName Nome do vértice.
+ * @returns Objeto do tipo AdjacencyListItem.
+ */
+export const AdjacencyListItem = (vertexName: string, distances: Array<EuclideanDistance>): AdjacencyListItem => {
+    return {
+        vertex: Vertex(vertexName, distances),
+        edges: LinkedList()
+    }
 }
