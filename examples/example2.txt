@@ -15,3 +15,6 @@ pode_ir(L, M, 300).
 pode_ir(M, N, 300).
 pode_ir(N, O, 300).
 pode_ir(O, P, 300).
+pode_ir(O, S1, 300).
+pode_ir(A, S1, 300).
+

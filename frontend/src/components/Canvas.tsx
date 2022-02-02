@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import { useD3 } from "../hooks/useD3";
 import * as d3 from "d3";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -45,6 +45,7 @@ export const Canvas = () => {
   const { MainGraph } = useContext(MainContext);
   const a = useRef<HTMLCanvasElement>(null);
   const [data, setData] = useState(graph);
+  const [updateGraph, setUpdateGraph] = useState(Date.now());
 
   useEffect(() => {
     if (typeof MainGraph !== "undefined") {
@@ -66,11 +67,12 @@ export const Canvas = () => {
       console.log(value);
 
       setData(value);
+      setUpdateGraph(Date.now());
     }
   }, [MainGraph]);
 
   function fun() {
-    // data.links[0].color = "red";
+    data.nodes[0].color = "red";
     data.links.pop();
   }
   const ref = useD3(
@@ -79,7 +81,6 @@ export const Canvas = () => {
         n.x = Math.random() * width;
         n.y = Math.random() * height;
       });
-      //   var canvas = d3.select("#network");
       var width = canvas.attr("width");
       var height = canvas.attr("height");
       var ctx = canvas.node().getContext("2d");
@@ -100,9 +101,6 @@ export const Canvas = () => {
             .distance((i) => 100)
             .strength(1)
         );
-
-      //simulation.nodes(data.nodes);
-      //simulation.force("link").links(data.links);
 
       canvas.call(
         d3
@@ -168,9 +166,9 @@ export const Canvas = () => {
         ctx.arc(d.x, d.y, r, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.font = "20px Arial bold";
+        ctx.font = "bold 16px Arial";
 
-        ctx.fillText(d.name, d.x + r, d.y + r);
+        ctx.fillText(d.name, d.x + r, d.y - r);
       }
 
       function drawLink(l: DrawLinkProps) {
@@ -194,77 +192,23 @@ export const Canvas = () => {
         var rX = x0 + t * vX;
         var rY = y0 + t * vY;
 
-        // var a = Math.sqrt(b * b + c * c);
-
-        // var alph = (Math.asin(b / a) * 180) / Math.PI;
-
-        // var betha = 90 - alph;
-
-        // var xDislocationReal = Math.sin(betha) * r;
-        // var yDislocationReal = Math.cos(betha) * r;
-        // var xReal = 0;
-        // var yReal = 0;
-
-        // if (l.target.x > l.source.x) {
-        //   //origem esquerda
-
-        //   if (xDislocationReal < 0) {
-        //     xReal = l.target.x + xDislocationReal;
-        //   } else {
-        //     xReal = l.target.x - xDislocationReal;
-        //   }
-
-        //   if (yDislocationReal > 0) {
-        //     yReal = l.target.y + yDislocationReal;
-        //   } else {
-        //     yReal = l.target.y - yDislocationReal;
-        //   }
-        // } else {
-        //   //origem direita
-
-        //   if (xDislocationReal >= 0) {
-        //     xReal = l.target.x + xDislocationReal;
-        //   } else {
-        //     xReal = l.target.x - xDislocationReal;
-        //   }
-
-        //   if (yDislocationReal <= 0) {
-        //     yReal = l.target.y + yDislocationReal;
-        //   } else {
-        //     yReal = l.target.y - yDislocationReal;
-        //   }
-        // }
-
-        // console.log("a:", alph);
-        // console.log("b:", betha);
-
         var mX = Math.abs(l.target.x + l.source.x) / 2;
         var mY = Math.abs(l.target.y + l.source.y) / 2;
 
         mX = Math.abs(l.target.x + mX) / 2;
         mY = Math.abs(l.target.y + mY) / 2;
         ctx.moveTo(l.source.x, l.source.y);
-        // canvas_arrow(ctx, l.source.x, l.source.y, mX, mY);
 
         mX = Math.abs(l.target.x + l.source.x) / 2;
         mY = Math.abs(l.target.y + l.source.y) / 2;
 
-        var mX2 = Math.abs(mX + l.source.x) / 2;
-        var mY2 = Math.abs(mY + l.source.y) / 2;
         ctx.moveTo(mX, mY);
-        //canvas_arrow(ctx, mX, mY, mX2, mY2);
 
         ctx.moveTo(l.source.x, l.source.y);
         canvas_arrow(ctx, l.source.x, l.source.y, rX, rY);
 
-        // ctx.moveTo(l.source.x, l.source.y);
-        // ctx.lineTo(l.target.x, l.source.y);
-
-        // ctx.moveTo(l.target.x, l.target.y);
-        // ctx.lineTo(l.target.x, l.source.y);
-
         ctx.stroke();
-        ctx.font = "10px arial bold";
+        ctx.font = "bold 10px Arial";
         ctx.fillStyle = "purple";
         ctx.fillText(
           l.distance,
@@ -297,7 +241,7 @@ export const Canvas = () => {
         );
       }
     },
-    [data.nodes.length]
+    [updateGraph]
   );
 
   return (
@@ -312,6 +256,7 @@ export const Canvas = () => {
         width="1000"
         height="500"
       ></canvas>
+      <Button onClick={fun}>Fun</Button>
     </Box>
   );
 };
