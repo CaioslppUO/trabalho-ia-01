@@ -1,12 +1,5 @@
-import { LinkedList } from "./linked_list";
-
-/**
- * Representa o conteúdo de cada vértice do grafo e o peso de uma aresta de vértice em relação a outro vértice.
- */
-export interface GraphEdge {
-    dstVertex: string;
-    weight: number;
-}
+import { CreateLinkedList } from "./linked_list";
+import { LinkedList, GraphEdge, EuclideanDistance, Vertex, AdjacencyListItem, Graph } from "../types/graphTypes";
 
 /**
  * Cria e retorna um objeto do tipo GraphEdge.
@@ -14,19 +7,11 @@ export interface GraphEdge {
  * @param weight Peso da aresta do vértice em relação a um outro vértice.
  * @returns Objeto do tipo GraphEdge.
  */
-export const GraphEdge = (dstVertex: string, weight: number): GraphEdge => {
+export const CreateGraphEdge = (dstVertex: string, weight: number): GraphEdge => {
     return {
         dstVertex,
         weight
     }
-}
-
-/**
- * Representa a distância euclidiana de um vértice qualquer para o vértice dstVertex.
- */
-export interface EuclideanDistance {
-    dstVertex: string;
-    euclidean_distance: number;
 }
 
 /**
@@ -35,19 +20,11 @@ export interface EuclideanDistance {
  * @param distance Distância em linha reta entre a origem e o destino.
  * @returns Objeto do tipo EuclideanDistance que representa a distância euclidiana entre um vértice qualquer e o vértice dstVertex.
  */
-export const EuclideanDistance = (dstVertex: string, euclidean_distance: number): EuclideanDistance => {
+export const CreateEuclideanDistance = (dstVertex: string, euclidean_distance: number): EuclideanDistance => {
     return {
         dstVertex,
         euclidean_distance
     }
-}
-
-/**
- * Representa um vértice do grafo.
- */
-export interface Vertex {
-    name: string;
-    distances: Array<EuclideanDistance>;
 }
 
 /**
@@ -56,7 +33,7 @@ export interface Vertex {
  * @param distances Vetor de distâncias euclidianas desse vértice para todos os outros.
  * @returns Objeto do tipo vertex que representa um vértice do grafo.
  */
-export const Vertex = (name: string, distances: Array<EuclideanDistance>): Vertex => {
+export const CreateVertex = (name: string, distances: Array<EuclideanDistance>): Vertex => {
     return {
         name,
         distances
@@ -64,62 +41,28 @@ export const Vertex = (name: string, distances: Array<EuclideanDistance>): Verte
 }
 
 /**
- * Representa um item da lista de adjacência utilizada para representar o grafo.
- */
- interface AdjacencyListItem {
-    vertexName: string;
-    edges: LinkedList<GraphEdge>;
-    distances: Array<EuclideanDistance>;
-}
-
-/**
  * Cria um objeto do tipo AdjacencyListItem
  * @param vertexName Nome do vértice.
  * @returns Objeto do tipo AdjacencyListItem.
  */
-const AdjacencyListItem = (vertexName: string, distances: Array<EuclideanDistance>): AdjacencyListItem => {
+const CreateAdjacencyListItem = (vertexName: string, distances: Array<EuclideanDistance>): AdjacencyListItem => {
     return {
         vertexName,
-        edges: LinkedList(),
+        edges: CreateLinkedList(),
         distances
     }
-}
-
-/**
- * Representa a lista de adjacência utilizada para representar o grafo.
- */
-export interface Graph {
-    // Lista de Adjacência.
-    graph: Array<AdjacencyListItem>;
-    /**
-     * Insere uma nova aresta na lista de adjacência do grafo.
-     * @param srcVertexName Vértice de origem da aresta.
-     * @param dstVertexName Vértice de destino da aresta.
-     * @param weight Peso da aresta.
-     */
-    insert: (vertexName: string, adjVertex: string, weight: number) => void;
-    /**
-     * Procura um vértice pelo nome e o retorna, junto com todas as suas arestas.
-     * @param vertexName Nome do vértice para procurar.
-     * @returns Vértice encontrado e suas arestas ou undefined caso não encontre.
-     */
-    getVertex: (vertexName: string) => AdjacencyListItem;
-    /**
-     * Imprime o grafo no terminal em formato JSON.
-     */
-    show: () => void;
 }
 
 /**
  * Cria o objeto que controla a lista de adjacência que representa o grafo.
  * @returns Objeto do tipo Graph.
  */
-export const Graph = (vertices: Array<Vertex>): Graph => {
+export const CreateGraph = (vertices: Array<Vertex>): Graph => {
     // Lista de Adjacência.
     let adjList: Array<AdjacencyListItem> = [];
 
     for(let vertex in vertices) { // Inicialização da lista de adjacência.
-        adjList.push(AdjacencyListItem(vertices[vertex].name, vertices[vertex].distances));
+        adjList.push(CreateAdjacencyListItem(vertices[vertex].name, vertices[vertex].distances));
     }
 
     /**
@@ -131,7 +74,7 @@ export const Graph = (vertices: Array<Vertex>): Graph => {
     const insert = (srcVertexName: string, dstVertexName: string, weight: number): void => {
         for(let adjItem in adjList) {
             if(adjList[adjItem].vertexName === srcVertexName) { // Achou onde a aresta deve ser inserida.
-                adjList[adjItem].edges.insert(GraphEdge(dstVertexName, weight));
+                adjList[adjItem].edges.insert(CreateGraphEdge(dstVertexName, weight));
             }
         }
     }

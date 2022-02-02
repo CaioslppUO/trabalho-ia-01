@@ -1,4 +1,5 @@
-import { Graph, Vertex, EuclideanDistance, GraphEdge } from "./structure/adjacency_list";
+import { CreateGraph, CreateVertex, CreateEuclideanDistance } from "./structure/adjacency_list";
+import { EuclideanDistance, Vertex, Graph } from "./types/graphTypes";
 
 const fs = require("fs");
 
@@ -59,13 +60,13 @@ const extract_h_entry_file_content = (content: string): Array<Vertex> => {
             let distance = Number(lines[line].split("(")[1].split(")")[0].split(",")[2]);
             for(let v in entry){
                 if(entry[v].name == srcVertex) { // Inserção de uma nova distância de um vértice já inserido.
-                    entry[v].distances.push(EuclideanDistance(dstVertex, distance));
+                    entry[v].distances.push(CreateEuclideanDistance(dstVertex, distance));
                     found = true;
                 }
             }
             if(!found) { // Inserção de um novo vértice.
                 entry.push(
-                    Vertex(srcVertex, [EuclideanDistance(dstVertex, distance)])
+                    CreateVertex(srcVertex, [CreateEuclideanDistance(dstVertex, distance)])
                 )
             }
         }
@@ -102,7 +103,7 @@ export const process_entry_file = (content: string, h_content: string): Graph =>
             if(points[point] == entry_h[h].name) { // Preenchimento da distância de "a" para "b".
                 for(let d in entry_h[h].distances) {
                     distances.push(
-                        EuclideanDistance(
+                        CreateEuclideanDistance(
                             entry_h[h].distances[d].dstVertex,
                             entry_h[h].distances[d].euclidean_distance
                         )
@@ -112,7 +113,7 @@ export const process_entry_file = (content: string, h_content: string): Graph =>
             for(let d in entry_h[h].distances) {
                 if(entry_h[h].distances[d].dstVertex == points[point]) { // Preenchimento da distância de "b" para "a".
                     distances.push(
-                        EuclideanDistance(
+                        CreateEuclideanDistance(
                             entry_h[h].name,
                             entry_h[h].distances[d].euclidean_distance
                         )
@@ -121,7 +122,7 @@ export const process_entry_file = (content: string, h_content: string): Graph =>
             }
         }
         vertices.push(
-            Vertex(
+            CreateVertex(
                 points[point],
                 distances
             )
@@ -129,7 +130,7 @@ export const process_entry_file = (content: string, h_content: string): Graph =>
     }
 
     // Criação do grafo.
-    let graph = Graph(vertices);
+    let graph = CreateGraph(vertices);
 
     // Preenchimento das arestas
     for(let e in entry) {
