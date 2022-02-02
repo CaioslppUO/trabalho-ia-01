@@ -65,33 +65,3 @@ export const CreateGraph = (vertices: Array<Vertex>): Graph => {
     show,
   };
 };
-
-// Exemplo de uso
-// let vertices = [
-//     Vertex(
-//         "a",
-//         [
-//             EuclideanDistance("b", 70),
-//             EuclideanDistance("c", 50)
-//         ]
-//     ),
-//     Vertex(
-//         "b",
-//         [
-//             EuclideanDistance("a", 70),
-//             EuclideanDistance("c", 40)
-//         ]
-//     ),
-//     Vertex(
-//         "c",
-//         [
-//             EuclideanDistance("a", 50),
-//             EuclideanDistance("b", 40)
-//         ]
-//     )
-// ]
-// let graph = Graph(vertices);
-// graph.insert("a", "b", 100);
-// graph.insert("a", "c", 80);
-// console.log(graph.getVertex("a"));
-// graph.show();
