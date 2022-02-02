@@ -27,7 +27,7 @@ app.get("/", jsonParser, (req, res) => {
  */
 app.post("/read-file", jsonParser, (req, res) => {
     try {
-        return res.status(200).send(process_entry_file(req.body.file_content));
+        return res.status(200).send(process_entry_file(req.body.file_content, req.body.file_content_h));
     } catch (error) {
         console.log(error);
         return res.status(400);

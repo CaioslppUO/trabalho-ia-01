@@ -1,4 +1,4 @@
-import { Graph, Vertex, EuclideanDistance } from "./structure/adjacency_list";
+import { Graph, Vertex, EuclideanDistance, GraphEdge } from "./structure/adjacency_list";
 
 const fs = require("fs");
 
@@ -127,7 +127,15 @@ export const process_entry_file = (content: string, h_content: string): Graph =>
             )
         );
     }
-    return Graph(vertices);
+
+    // Criação do grafo.
+    let graph = Graph(vertices);
+
+    // Preenchimento das arestas
+    for(let e in entry) {
+        graph.insert(entry[e].srcVertex, entry[e].dstVertex, entry[e].distance);
+    }
+    return graph;
 }
 
 // Exemplo de uso
