@@ -39,6 +39,18 @@ export interface AdjacencyListItem {
 }
 
 /**
+ * Representa o algoritmo A*.
+ */
+export interface AStar {
+  /**
+    * Função que executa o algoritmo A*.
+    * @param start_vertex Vértice de início do algoritmo.
+    * @param end_vertex Vértice de destino do algoritmo.
+   */
+  run: (start_vertex: string, end_vertex: string) => void;
+}
+
+/**
  * Representa a lista de adjacência utilizada para representar o grafo.
  */
 export interface Graph {

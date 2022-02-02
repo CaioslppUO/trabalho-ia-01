@@ -1,5 +1,8 @@
 import { CreateGraph } from "./structure/adjacency_list";
 import { EuclideanDistance, Vertex, Graph } from "./types/graphTypes";
+import { a_star } from "./algorithms/a_start";
+
+const fs = require("fs");
 
 /**
  * Representa o conteúdo do arquivo de entrada.
@@ -118,6 +121,12 @@ export const process_entry_file = (
   // Preenchimento das distâncias euclidianas.
   for (let point in points) {
     let distances: Array<EuclideanDistance> = [];
+    distances.push(
+      EuclideanDistance(
+        points[point],
+        0
+      )
+    )
     for (let h in entry_h) {
       // Percorre todas as distâncias euclidianas.
       if (points[point] == entry_h[h].name) {
@@ -157,16 +166,17 @@ export const process_entry_file = (
 };
 
 // Exemplo de uso
-// fs.readFile('/home/caioslpp/git/trabalho-ia-01/src/tests/entry.txt', 'utf8' , (err, data) => {
-//     if (err) {
-//       console.error(err)
-//       return
-//     }
-//     fs.readFile('/home/caioslpp/git/trabalho-ia-01/src/tests/entry_h.txt', 'utf8' , (err, data_2) => {
-//         if (err) {
-//           console.error(err)
-//           return
-//         }
-//         process_entry_file(data, data_2).show();
-//     })
-// })
+fs.readFile('/home/caioslpp/git/trabalho-ia-01/examples/entry.txt', 'utf8' , (err: any, data: any) => {
+    if (err) {
+      console.error(err)
+      return
+    }
+    fs.readFile('/home/caioslpp/git/trabalho-ia-01/examples/entry_h.txt', 'utf8' , (err: any, data_2: any) => {
+        if (err) {
+          console.error(err)
+          return
+        }
+        let graph = process_entry_file(data, data_2);
+        let a = a_star(graph).run("a","f");
+    })
+})
