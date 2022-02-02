@@ -1,29 +1,19 @@
 import { Flex, Button, Input, Heading, Box } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { IoMdArrowBack } from "react-icons/io";
-import { MainContext } from "../contexts/Main";
-import { Canvas } from "./Canvas";
-import { Home } from "./Home";
-import { MenuItem } from "./MenuItem";
+import { MainContext } from "../../contexts/Main";
+import { ArrowBack } from "../ArrowBack/Arrowback";
+import { Canvas } from "../Canvas/Canvas";
+import { FileSelector } from "../FileSelector/FileSelector";
+import { MenuItem } from "./MenuItem/MenuItem";
 
 export const Menu = () => {
   const { setTab, tab } = useContext(MainContext);
 
   return (
     <Flex alignItems="center" flexDirection="column">
-      {tab !== 0 && (
-        <Box
-          cursor="pointer"
-          _hover={{ opacity: "0.6" }}
-          position="fixed"
-          top="20px"
-          left="20px"
-          onClick={() => setTab(0)}
-        >
-          <IoMdArrowBack size="30px" />
-        </Box>
-      )}
-      {tab === 0 && <Home />}
+      {tab !== 0 && <ArrowBack onClick={() => setTab(0)} />}
+      {tab === 0 && <FileSelector />}
 
       {tab === 1 && (
         <Flex flexDirection="column">
