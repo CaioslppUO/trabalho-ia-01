@@ -1,4 +1,4 @@
-import { CreateGraph, CreateVertex, CreateEuclideanDistance } from "./structure/adjacency_list";
+import { CreateGraph } from "./structure/adjacency_list";
 import { EuclideanDistance, Vertex, Graph } from "./types/graphTypes";
 
 /**
@@ -47,6 +47,11 @@ const extract_entry_file_content = (content: string): Array<EntryFileContent> =>
     return entry;
 }
 
+/**
+ * Extrai co conteúdo do arquivo de entrada com as distâncias euclidianas.
+ * @param content Texto carregado do arquivo de entrada.
+ * @returns Objeto do tipo Array<Vertex> contendo todos os vértices e as distâncias entre todos eles.
+ */
 const extract_h_entry_file_content = (content: string): Array<Vertex> => {
     let entry: Array<Vertex> = [];
     let lines = content.split("\n");
@@ -58,13 +63,13 @@ const extract_h_entry_file_content = (content: string): Array<Vertex> => {
             let distance = Number(lines[line].split("(")[1].split(")")[0].split(",")[2]);
             for(let v in entry){
                 if(entry[v].name == srcVertex) { // Inserção de uma nova distância de um vértice já inserido.
-                    entry[v].distances.push(CreateEuclideanDistance(dstVertex, distance));
+                    entry[v].distances.push(EuclideanDistance(dstVertex, distance));
                     found = true;
                 }
             }
             if(!found) { // Inserção de um novo vértice.
                 entry.push(
-                    CreateVertex(srcVertex, [CreateEuclideanDistance(dstVertex, distance)])
+                    Vertex(srcVertex, [EuclideanDistance(dstVertex, distance)])
                 )
             }
         }
@@ -101,7 +106,7 @@ export const process_entry_file = (content: string, h_content: string): Graph =>
             if(points[point] == entry_h[h].name) { // Preenchimento da distância de "a" para "b".
                 for(let d in entry_h[h].distances) {
                     distances.push(
-                        CreateEuclideanDistance(
+                        EuclideanDistance(
                             entry_h[h].distances[d].dstVertex,
                             entry_h[h].distances[d].euclidean_distance
                         )
@@ -111,7 +116,7 @@ export const process_entry_file = (content: string, h_content: string): Graph =>
             for(let d in entry_h[h].distances) {
                 if(entry_h[h].distances[d].dstVertex == points[point]) { // Preenchimento da distância de "b" para "a".
                     distances.push(
-                        CreateEuclideanDistance(
+                        EuclideanDistance(
                             entry_h[h].name,
                             entry_h[h].distances[d].euclidean_distance
                         )
@@ -120,7 +125,7 @@ export const process_entry_file = (content: string, h_content: string): Graph =>
             }
         }
         vertices.push(
-            CreateVertex(
+            Vertex(
                 points[point],
                 distances
             )
@@ -138,12 +143,12 @@ export const process_entry_file = (content: string, h_content: string): Graph =>
 }
 
 // Exemplo de uso
-// fs.readFile('entry.txt', 'utf8' , (err, data) => {
+// fs.readFile('/home/caioslpp/git/trabalho-ia-01/src/tests/entry.txt', 'utf8' , (err, data) => {
 //     if (err) {
 //       console.error(err)
 //       return
 //     }
-//     fs.readFile('entry_h.txt', 'utf8' , (err, data_2) => {
+//     fs.readFile('/home/caioslpp/git/trabalho-ia-01/src/tests/entry_h.txt', 'utf8' , (err, data_2) => {
 //         if (err) {
 //           console.error(err)
 //           return
