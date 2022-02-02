@@ -1,8 +1,6 @@
 import { CreateGraph, CreateVertex, CreateEuclideanDistance } from "./structure/adjacency_list";
 import { EuclideanDistance, Vertex, Graph } from "./types/graphTypes";
 
-const fs = require("fs");
-
 /**
  * Representa o conteúdo do arquivo de entrada.
  */

@@ -1,5 +1,5 @@
 import { CreateLinkedList } from "./linked_list";
-import { LinkedList, GraphEdge, EuclideanDistance, Vertex, AdjacencyListItem, Graph } from "../types/graphTypes";
+import { GraphEdge, EuclideanDistance, Vertex, AdjacencyListItem, Graph } from "../types/graphTypes";
 
 /**
  * Cria e retorna um objeto do tipo GraphEdge.
