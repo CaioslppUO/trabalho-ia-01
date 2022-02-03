@@ -14,8 +14,8 @@ interface Cost {
 interface Output {
     srcVertex: string;
     dstVertex: string;
-    explored: number;
     expanded: number;
+    total_distance: number;
 }
 
 /**
@@ -48,7 +48,7 @@ const find_position = (arr: Array<Cost>, vertex: string): number => {
  * @param end Vértice de término.
  * @return Objeto que representa a saída do algoritmo, contendo o caminho executado e medidas de desempenho.
  */
-export const a_start = (graph: Graph): AStar => {
+export const a_star = (graph: Graph): AStar => {
     const INF = Number.MAX_SAFE_INTEGER;
     
     /**
@@ -135,7 +135,7 @@ export const a_start = (graph: Graph): AStar => {
      */
     const run = (src: string, dst: string): Array<Output> => {
         // Conta o número de nós expandidos e explorados.
-        let expanded: number = 0, explored: number = 0
+        let total_distance: number = 0, expanded: number = 0
         // Inicialização dos vetores utilizados pelo algoritmo.
         const process = init(src, dst);
         // Fila de prioridade de expansão dos nós.
@@ -145,7 +145,6 @@ export const a_start = (graph: Graph): AStar => {
 
         while(priority_queue.length !== 0) { // Enquanto existirem nós que possam ser expandidos.
             let next = get_vertex_with_lowers_cost(priority_queue); // Seleciona um nó para expansão.
-            expanded++;
             if(next === dst) { return process.output; }; // Achou a resposta.
 
             priority_queue = priority_queue.filter((element) => { // Remoção do nó explorado da fila
@@ -160,13 +159,14 @@ export const a_start = (graph: Graph): AStar => {
                     let neighbor_weigh = vertex.edges.list[e].weight;
                     let try_cost = get_vertex_cost(process.g_n, next) + neighbor_weigh; // Custo de avançar por esse caminho.
                     if(try_cost < get_vertex_cost(process.g_n, neighbor_vertex)) { // Explora o nó expandido.
-                        explored++;
-                        // Marca que esse foi o caminho escolhido.
+                        expanded++;
+                        total_distance += neighbor_weigh;
+                        // Marca que esse foi o caminho escolhido até então.
                         process.output.push({
                             srcVertex: next,
                             dstVertex: neighbor_vertex,
                             expanded: expanded,
-                            explored: explored
+                            total_distance: total_distance
                         })
 
                         // Atribuição do custo passado (g(n)) para o vértice vizinho.

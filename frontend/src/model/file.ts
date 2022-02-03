@@ -1,6 +1,6 @@
 import { CreateGraph } from "./structure/adjacency_list";
 import { EuclideanDistance, Vertex, Graph } from "./types/graphTypes";
-import { a_star } from "./algorithms/a_start";
+import { a_star } from "./algorithms/a_star";
 
 const fs = require("fs");
 
@@ -178,5 +178,6 @@ fs.readFile('/home/caioslpp/git/trabalho-ia-01/examples/entry.txt', 'utf8' , (er
         }
         let graph = process_entry_file(data, data_2);
         let a = a_star(graph).run("a","f");
+        console.log(a);
     })
 })
