@@ -1,16 +1,16 @@
-import { Flex, Button, Input, Heading, Box } from "@chakra-ui/react";
+import { Flex, Heading } from "@chakra-ui/react";
 import { useContext, useState } from "react";
-import { useToast } from "@chakra-ui/react";
-import { IoMdArrowBack } from "react-icons/io";
+
 import { MainContext } from "../../contexts/Main";
 import { ArrowBack } from "../ArrowBack/Arrowback";
 import { Canvas } from "../Canvas/Canvas";
 import { FileSelector } from "../FileSelector/FileSelector";
 import { MenuItem } from "./MenuItem/MenuItem";
 import { process_entry_file } from "../../model/file";
+import { a_star } from "../../model/algorithms/a_start";
 
 export const Menu = () => {
-  const { setTab, tab, setMainGraph } = useContext(MainContext);
+  const { setTab, tab, setMainGraph, setExplorePath } = useContext(MainContext);
   const [file1, setFile1] = useState<string | ArrayBuffer>("");
 
   return (
@@ -36,8 +36,9 @@ export const Menu = () => {
           title="Selecione o arquivo de: Distâncias euclidianas"
           onSelected={(data) => {
             setTab(3);
-            console.log(process_entry_file(file1 as string, data as string));
-            setMainGraph(process_entry_file(file1 as string, data as string));
+            const graph = process_entry_file(file1 as string, data as string);
+            setMainGraph(graph);
+            setExplorePath(a_star(graph).run("a", "f") as any);
           }}
         />
       )}

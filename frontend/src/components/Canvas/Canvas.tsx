@@ -13,6 +13,7 @@ import {
   onDragEnd,
 } from "./graphControl/graphInterfaceControl";
 import { MainContext } from "../../contexts/Main";
+import { ExploreProps } from "../../contexts/Main";
 
 var graph: GraphProps = {
   nodes: [
@@ -20,6 +21,7 @@ var graph: GraphProps = {
     { name: "B", color: "#3d3d3d", x: 0, y: 0 },
   ],
   links: [{ source: "A", target: "B", color: "red", distance: 100 }],
+  i: 0,
 };
 
 type TableLineProps = {
@@ -33,10 +35,47 @@ type TableLineProps = {
  * @returns React component
  */
 export const Canvas = () => {
-  const { MainGraph } = useContext(MainContext);
+  const { MainGraph, explorePath } = useContext(MainContext);
   const [data, setData] = useState(graph);
   const [tableData, setTableData] = useState<Array<TableLineProps>>([]);
+  const [iterator, setIterator] = useState(0);
   const [updateGraph, setUpdateGraph] = useState(Date.now());
+
+  function animationExplore(e: ExploreProps[]) {
+    if (data.i < e.length) {
+      e.forEach((i) => {
+        const source = data.nodes.find((j) => j.name === i.srcVertex);
+        const target = data.nodes.find((j) => j.name === i.dstVertex);
+
+        const link = data.links.find(
+          (j) => j.source === i.srcVertex && j.target === i.dstVertex
+        );
+        if (!!source && !!target && !!link) {
+          source.color = "#81ff61";
+          target.color = "#81ff61";
+          link.color = "#81ff61";
+        }
+      });
+      // if (!!source && !!target) {
+      //   setTimeout(() => {
+      //     source.color = "#81ff61";
+
+      //     setTimeout(() => {
+      //       target.color = "#81ff61";
+      //       data.i = data.i + 1;
+      //       animationExplore(e);
+      //     }, 500);
+      //   }, 1000);
+      // }
+    }
+  }
+
+  useEffect(() => {
+    if (explorePath.length > 0) {
+      data.i = 0;
+      animationExplore(explorePath);
+    }
+  }, [explorePath]);
 
   useEffect(() => {
     console.log(MainGraph);
@@ -45,6 +84,7 @@ export const Canvas = () => {
       const newData: GraphProps = {
         nodes: [],
         links: [],
+        i: 0,
       };
 
       const newTableData: TableLineProps[] = [];
@@ -137,7 +177,7 @@ export const Canvas = () => {
         });
       }
     },
-    [data]
+    [data, data.i]
   );
 
   return (
@@ -155,15 +195,15 @@ export const Canvas = () => {
         <Table variant="simple">
           <Thead>
             <Tr>
-              <Th>De</Th>
-              <Th>Dara</Th>
+              <Th>de</Th>
+              <Th>para</Th>
               <Th isNumeric>Distância</Th>
             </Tr>
           </Thead>
           <Tbody>
             {tableData &&
               tableData.map((i) => (
-                <Tr>
+                <Tr key={i.column3 + i.column1 + i.column2}>
                   <Td>{i.column1}</Td>
                   <Td>{i.column2}</Td>
                   <Td isNumeric>{i.column3}</Td>
