@@ -9,14 +9,33 @@ interface Cost {
 }
 
 /**
- * Representa a saída do algoritmo.
+ * Representa uma aresta e a distância entre essa aresta.
  */
-interface Output {
+interface StraightPath {
+    srcVertex: string;
+    dstVertex: string;
+    distance: number;
+}
+
+/**
+ * Representa a saída preliminar do algoritmo.
+ */
+ interface Output {
     srcVertex: string;
     dstVertex: string;
     visited: number;
     total_distance: number;
+    local_distance: number;
 }
+
+/**
+ * Representa a resposta dada pelo algoritmo, junto com todas as métricas de desempenho.
+ */
+interface AStarOutput {
+    straight_path: Array<StraightPath> | null;
+    output: Array<Output>;
+}
+
 
 /**
  * Representa os vetores utilizados no algoritmo A*.
@@ -128,12 +147,33 @@ export const a_star = (graph: Graph): AStar => {
     }
 
     /**
+     * Dado a resposta do algoritmo, retorna o caminho do ponto inicial até o vértice final.
+     * @param output Resposta do A*.
+     * @param dst Vértice de destino da execução do algoritmo.
+     * @returns Objeto que representa o caminho entre o vértice inicial e o final.
+     */
+    const get_straight_path = (output: Array<Output>, dst: string, ): Array<StraightPath> => {
+        let res: Array<StraightPath> = [];
+        let last = output[output.length - 1];
+        let distance = last.local_distance;
+        res.push({dstVertex: dst, srcVertex: last.srcVertex, distance: distance});
+        dst = last.srcVertex;
+        for(let i = output.length-2; i >= 0; i--) {
+            if(output[i].dstVertex === dst) {
+                res.push({dstVertex: dst, srcVertex: output[i].srcVertex, distance: output[i].local_distance});
+                dst = output[i].srcVertex;
+            }
+        }
+        return res;
+    }
+
+    /**
      * Executa o algoritmo A* e retorna a saída.
      * @param src Vértice de origem.
      * @param dst Vértice de destino.
      * @returns Vetor com os caminhos percorridos pelo algoritmo e medidas de desempenho.
      */
-    const run = (src: string, dst: string): Array<Output> => {
+    const run = (src: string, dst: string): AStarOutput => {
         // Conta o número de nós expandidos e explorados.
         let total_distance: number = 0, visited: number = 0
         // Inicialização dos vetores utilizados pelo algoritmo.
@@ -145,7 +185,12 @@ export const a_star = (graph: Graph): AStar => {
 
         while(priority_queue.length !== 0) { // Enquanto existirem nós que possam ser expandidos.
             let next = get_vertex_with_lowers_cost(priority_queue); // Seleciona um nó para expansão.
-            if(next === dst) { return process.output; }; // Achou a resposta.
+            if(next === dst) { 
+                return {
+                    output: process.output,
+                    straight_path: get_straight_path(process.output, dst)
+                }
+            }; // Achou a resposta.
 
             priority_queue = priority_queue.filter((element) => { // Remoção do nó explorado da fila
                 return !(element.vertex===next);
@@ -166,7 +211,8 @@ export const a_star = (graph: Graph): AStar => {
                             srcVertex: next,
                             dstVertex: neighbor_vertex,
                             visited: visited,
-                            total_distance: total_distance
+                            total_distance: total_distance,
+                            local_distance: neighbor_weigh
                         })
 
                         // Atribuição do custo passado (g(n)) para o vértice vizinho.
@@ -186,7 +232,10 @@ export const a_star = (graph: Graph): AStar => {
                 throw Error(`Could not find vertex ${next}.`);
             }
         }
-        return [];
+        return {
+            output: [],
+            straight_path: []
+        };
     }
 
     return {
