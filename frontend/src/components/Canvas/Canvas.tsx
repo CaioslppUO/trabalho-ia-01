@@ -1,8 +1,8 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, Button } from "@chakra-ui/react";
 import { useD3 } from "../../hooks/useD3";
 import * as d3 from "d3";
-import { useContext, useEffect, useState } from "react";
-import { GraphProps } from "./canvasTypes/types";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { GraphProps, NodeProps } from "./canvasTypes/types";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import {
   drawNode,
@@ -21,7 +21,6 @@ var graph: GraphProps = {
     { name: "B", color: "#3d3d3d", x: 0, y: 0 },
   ],
   links: [{ source: "A", target: "B", color: "red", distance: 100 }],
-  i: 0,
 };
 
 type TableLineProps = {
@@ -37,41 +36,16 @@ type TableLineProps = {
 export const Canvas = () => {
   const { MainGraph, explorePath } = useContext(MainContext);
   const [data, setData] = useState(graph);
+  const [width, setWith] = useState("500");
+  const [height, setHeight] = useState("500");
+  const [r, setR] = useState(13);
+  const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
+  const [simulation, setSimulation] =
+    useState<d3.Simulation<NodeProps, undefined>>();
+
   const [tableData, setTableData] = useState<Array<TableLineProps>>([]);
 
-  function animationExplore(i: number, e: ExploreProps[]) {
-    if (i < e.length) {
-      // e.forEach((i) => {
-      const source = data.nodes.find((j) => j.name === e[i].srcVertex);
-      const target = data.nodes.find((j) => j.name === e[i].dstVertex);
-
-      const link = data.links.find(
-        (j) => j.source === e[i].srcVertex && j.target === e[i].dstVertex
-      );
-      //   if (!!source && !!target && !!link) {
-      //     source.color = "#81ff61";
-      //     target.color = "#81ff61";
-      //     link.color = "#81ff61";
-      //   }
-      // });
-      if (!!source && !!target && !!link) {
-        setTimeout(() => {
-          source.color = "#81ff61";
-          setTimeout(() => {
-            target.color = "#81ff61";
-            link.color = "#81ff61";
-            animationExplore(i + 1, e);
-          }, 500);
-        }, 1000);
-      }
-    }
-  }
-
-  useEffect(() => {
-    if (explorePath.length > 0) {
-      animationExplore(0, explorePath);
-    }
-  }, [explorePath]);
+  const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     // console.log(MainGraph);
@@ -80,7 +54,6 @@ export const Canvas = () => {
       const newData: GraphProps = {
         nodes: [],
         links: [],
-        i: 0,
       };
 
       const newTableData: TableLineProps[] = [];
@@ -121,20 +94,20 @@ export const Canvas = () => {
     }
   }, [MainGraph]);
 
-  const ref = useD3(
-    (canvas: any) => {
-      data.nodes.forEach((n) => {
-        n.x = Math.random() * width;
-        n.y = Math.random() * height;
-      });
-      var width = canvas.attr("width");
-      var height = canvas.attr("height");
-      var ctx = canvas.node().getContext("2d");
-      var r = 13;
-      var simulation = d3
+  const funcao = useCallback(() => {
+    const canvas = d3.select(ref.current);
+
+    setWith(canvas.attr("width"));
+    setHeight(canvas.attr("height"));
+    let canvasNode = canvas.node();
+    if (canvasNode !== null) {
+      setCtx(canvasNode.getContext("2d"));
+    }
+    setSimulation(
+      d3
         .forceSimulation(data.nodes)
-        .force("x", d3.forceX(width / 2))
-        .force("y", d3.forceY(height / 2))
+        .force("x", d3.forceX(parseInt(width) / 2))
+        .force("y", d3.forceY(parseInt(height) / 2))
         .force("collide", d3.forceCollide(r + 1))
         .force("charge", d3.forceManyBody().strength(-1900))
         .on("tick", update)
@@ -146,23 +119,36 @@ export const Canvas = () => {
             .id((i) => i.name)
             .distance((i) => 100)
             .strength(1)
+        )
+    );
+    try {
+      if (typeof simulation !== "undefined" && !!canvas && !!canvas.node) {
+        canvas.call(
+          d3
+            .drag()
+            // @ts-ignore
+            .container(canvas.node())
+            .subject((event) => {
+              return simulation.find(event.x, event.y);
+            })
+            .on("start", (event) => onStartDrag(event, simulation))
+            .on("drag", (event) =>
+              onDrag(event, parseInt(width), parseInt(height))
+            )
+            .on("end", (event, d: any) => onDragEnd(event, simulation))
         );
+      }
+    } catch (error) {
+      console.log(error);
+    }
 
-      canvas.call(
-        d3
-          .drag()
-          .container(canvas.node())
-          .subject((event) => {
-            return simulation.find(event.x, event.y);
-          })
-          .on("start", (event) => onStartDrag(event, simulation))
-          .on("drag", (event) => onDrag(event, width, height))
-          .on("end", (event, d: any) => onDragEnd(event, simulation))
-      );
-
-      function update() {
-        ctx.clearRect(0, 0, width, height);
-        data.nodes.forEach((e) => checkCollision(e, r, width, height));
+    function update() {
+      if (!!ctx) {
+        console.log("Update");
+        ctx.clearRect(0, 0, parseInt(width), parseInt(height));
+        data.nodes.forEach((e) =>
+          checkCollision(e, r, parseInt(width), parseInt(height))
+        );
 
         data.links.forEach((element) => {
           drawLink(ctx, element as any, r);
@@ -172,9 +158,18 @@ export const Canvas = () => {
           drawNode(ctx, element, r);
         });
       }
-    },
-    [data, data.nodes.length]
-  );
+    }
+  }, [ctx, data, simulation, r, height, width]);
+
+  useEffect(() => {
+    if (ref.current !== null) {
+      try {
+        funcao();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [ref.current, data]);
 
   return (
     <Flex>
@@ -187,6 +182,18 @@ export const Canvas = () => {
           height="500"
         ></canvas>
       </Box>
+      <Button
+        onClick={() => {
+          data.nodes[0].color = "magenta";
+          // oi();
+          // if (ctx) {
+          //   ctx.clearRect(0, 0, parseInt(width), parseInt(height));
+          // }
+          console.log(data);
+        }}
+      >
+        Fun
+      </Button>
       <Flex marginLeft="30px" overflowY="scroll" width="300px" height="500px">
         <Table variant="simple">
           <Thead>

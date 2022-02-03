@@ -8,6 +8,8 @@ import { FileSelector } from "../FileSelector/FileSelector";
 import { MenuItem } from "./MenuItem/MenuItem";
 import { process_entry_file } from "../../model/file";
 import { a_star } from "../../model/algorithms/a_start";
+import { Canvas2 } from "../Canvas/Canvas2";
+import { Canvas3 } from "../Canvas/Canvas3";
 
 export const Menu = () => {
   const { setTab, tab, setMainGraph, setExplorePath } = useContext(MainContext);
@@ -52,6 +54,8 @@ export const Menu = () => {
         </Flex>
       )}
       {tab === 3 && <Canvas />}
+      {tab === 4 && <Canvas2 />}
+      {tab === 3 && <Canvas3 />}
     </Flex>
   );
 };

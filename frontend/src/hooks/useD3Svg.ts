@@ -5,7 +5,7 @@ export const useD3Svg = (
   renderChartFn: (param: any) => void,
   dependencies: Array<any>
 ) => {
-  const ref = React.useRef<HTMLCanvasElement>(null);
+  const ref = React.useRef<SVGSVGElement>(null);
 
   React.useEffect(() => {
     renderChartFn(d3.select(ref.current as any));

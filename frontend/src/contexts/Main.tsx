@@ -22,7 +22,7 @@ export type MainObject = {
 export const MainContext = createContext({} as MainObject);
 
 export function MainContextProvider(props: ComponentProps) {
-  const [tab, setTab] = useState(0);
+  const [tab, setTab] = useState(4);
   const [MainGraph, setMainGraph] = useState<Graph>({} as Graph);
   const [explorePath, setExplorePath] = useState<ExploreProps[]>([]);
 

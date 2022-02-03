@@ -40,5 +40,4 @@ export type DrawLinkProps = {
 export type GraphProps = {
   nodes: NodeProps[];
   links: LinkProps[];
-  i: number;
 };

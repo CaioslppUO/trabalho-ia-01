@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<meta charset="utf-8" />
+<style>
+  .links line {
+    stroke: #999;
+    stroke-opacity: 0.6;
+  }
+
+  .nodes circle {
+    stroke: #fff;
+    stroke-width: 1.5px;
+  }
+
+  text {
+    font-family: sans-serif;
+    font-size: 10px;
+  }
+</style>
+<svg width="960" height="600"></svg>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+  const width = 500;
+  const height = 500;
+  const r = 13;
+  const data = {
+    nodes: [
+      {
+        id: "a",
+        name: "a",
+        color: "gray",
+        x: Math.random() * width,
+        y: Math.random() * height,
+      },
+      {
+        id: "b",
+        name: "b",
+        color: "gray",
+        x: Math.random() * width,
+        y: Math.random() * height,
+      },
+      {
+        id: "c",
+        name: "c",
+        color: "gray",
+        x: Math.random() * width,
+        y: Math.random() * height,
+      },
+      {
+        id: "d",
+        name: "d",
+        color: "gray",
+        x: Math.random() * width,
+        y: Math.random() * height,
+      },
+      {
+        id: "e",
+        name: "e",
+        color: "gray",
+        x: Math.random() * width,
+        y: Math.random() * height,
+      },
+      {
+        id: "g",
+        name: "g",
+        color: "gray",
+        x: Math.random() * width,
+        y: Math.random() * height,
+      },
+      {
+        id: "f",
+        name: "f",
+        color: "gray",
+        x: Math.random() * width,
+        y: Math.random() * height,
+      },
+    ],
+    links: [
+      { source: "a", target: "b" },
+      { source: "a", target: "c" },
+      { source: "b", target: "d" },
+      { source: "d", target: "e" },
+      { source: "e", target: "f" },
+      { source: "c", target: "g" },
+      { source: "g", target: "f" },
+    ],
+  };
+
+  const svg = d3
+    .select("svg")
+    .append("svg")
+    .attr("id", "graph")
+    .attr("width", width)
+    .attr("height", height);
+
+  const simulation = d3
+    .forceSimulation(data.nodes)
+    .force(
+      "link",
+      d3
+        .forceLink(data.links)
+        // @ts-ignore
+        .id((d) => d.name)
+        .distance(100)
+        .strength(1)
+    )
+    .force("charge", d3.forceManyBody().strength(-1900))
+    .force("x", d3.forceX(width / 2))
+    .force("y", d3.forceY(height / 2))
+    .force("collide", d3.forceCollide(r + 10));
+
+  const drag = (simulation) => {
+    function dragstarted(event, d) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+
+    function dragged(event, d) {
+      d.fx = event.x;
+      d.fy = event.y;
+    }
+
+    function dragended(event, d) {
+      if (!event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
+
+    return d3
+      .drag()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended);
+  };
+
+  const link = svg
+    .append("g")
+    .attr("stroke", "#999")
+    .attr("stroke-opacity", 0.6)
+    .attr("stroke-width", 3)
+    .selectAll("line")
+    .data(data.links)
+    .append("line");
+
+  const node = svg
+    .append("g")
+    .attr("fill", "gray")
+    .attr("stroke", "gray")
+    .attr("stroke-width", 1.5)
+    .selectAll(".node")
+    .data(data.nodes)
+    .append("circle")
+    .attr("fill", () => "gray")
+    .attr("stroke", () => "gray")
+    .attr("r", 13)
+    // @ts-ignore
+    .call(drag(simulation));
+
+  node
+    .selectAll("g")
+    .data(data.nodes)
+    .enter()
+    .append("text")
+    .text(function (d) {
+      return d.id;
+    })
+    .attr("x", 6)
+    .attr("y", 3);
+
+  //   simulation.on("tick", () => {
+  //     link
+  //       // @ts-ignore
+  //       .attr("x1", (d) => d.source.x)
+  //       // @ts-ignore
+  //       .attr("y1", (d) => d.source.y)
+  //       // @ts-ignore
+  //       .attr("x2", (d) => d.target.x)
+  //       // @ts-ignore
+  //       .attr("y2", (d) => d.target.y);
+  //     node
+  //       .attr("cx", (d) => {
+  //         if (d.x < 0) {
+  //           return 0 + r;
+  //         } else if (d.x > width) {
+  //           return width - r;
+  //         } else {
+  //           return d.x;
+  //         }
+  //       })
+  //       .attr("cy", (d) => {
+  //         if (d.y < 0) {
+  //           return 0 + r;
+  //         } else if (d.y > height) {
+  //           return height - r;
+  //         } else {
+  //           return d.y;
+  //         }
+  //       });
+  //   });
+</script>
