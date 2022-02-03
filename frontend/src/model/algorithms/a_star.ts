@@ -14,7 +14,7 @@ interface Cost {
 interface Output {
     srcVertex: string;
     dstVertex: string;
-    expanded: number;
+    visited: number;
     total_distance: number;
 }
 
@@ -135,7 +135,7 @@ export const a_star = (graph: Graph): AStar => {
      */
     const run = (src: string, dst: string): Array<Output> => {
         // Conta o número de nós expandidos e explorados.
-        let total_distance: number = 0, expanded: number = 0
+        let total_distance: number = 0, visited: number = 0
         // Inicialização dos vetores utilizados pelo algoritmo.
         const process = init(src, dst);
         // Fila de prioridade de expansão dos nós.
@@ -159,13 +159,13 @@ export const a_star = (graph: Graph): AStar => {
                     let neighbor_weigh = vertex.edges.list[e].weight;
                     let try_cost = get_vertex_cost(process.g_n, next) + neighbor_weigh; // Custo de avançar por esse caminho.
                     if(try_cost < get_vertex_cost(process.g_n, neighbor_vertex)) { // Explora o nó expandido.
-                        expanded++;
+                        visited++;
                         total_distance += neighbor_weigh;
                         // Marca que esse foi o caminho escolhido até então.
                         process.output.push({
                             srcVertex: next,
                             dstVertex: neighbor_vertex,
-                            expanded: expanded,
+                            visited: visited,
                             total_distance: total_distance
                         })
 
