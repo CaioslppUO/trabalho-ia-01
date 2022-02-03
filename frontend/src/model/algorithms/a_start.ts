@@ -121,6 +121,7 @@ export const a_star = (graph: Graph): AStar => {
         // Preenchimento do custo estimado e custo passado do vértice inicial.
         let start_function_cost_position = find_vertex_position(function_costs, start_vertex);
         let start_past_cost_position = find_vertex_position(past_costs, start_vertex);
+
         // Calculo de h(n) para o vértice inicial.
         let start_function_cost = h(start_vertex, end_vertex);
         function_costs[start_function_cost_position].cost = start_function_cost;
@@ -163,10 +164,6 @@ export const a_star = (graph: Graph): AStar => {
             if(costs[c].vertex == vertex) return costs[c].cost;
         }
         throw "Could not find vertex in costs array";
-    }
-
-    const reconstruct_path = (srcVertex: string, dstVertex: string) => {
-        
     }
 
     /**
