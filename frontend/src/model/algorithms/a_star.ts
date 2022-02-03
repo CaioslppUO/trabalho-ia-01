@@ -34,6 +34,7 @@ interface StraightPath {
 interface AStarOutput {
     straight_path: Array<StraightPath> | null;
     output: Array<Output>;
+    distance: number;
 }
 
 
@@ -186,9 +187,15 @@ export const a_star = (graph: Graph): AStar => {
         while(priority_queue.length !== 0) { // Enquanto existirem nós que possam ser expandidos.
             let next = get_vertex_with_lowers_cost(priority_queue); // Seleciona um nó para expansão.
             if(next === dst) { 
+                let distance = 0;
+                let straight = get_straight_path(process.output, dst);
+                for(let s in straight) {
+                    distance += straight[s].distance;
+                }
                 return {
                     output: process.output,
-                    straight_path: get_straight_path(process.output, dst)
+                    straight_path: straight,
+                    distance
                 }
             }; // Achou a resposta.
 
@@ -234,7 +241,8 @@ export const a_star = (graph: Graph): AStar => {
         }
         return {
             output: [],
-            straight_path: []
+            straight_path: [],
+            distance: -1
         };
     }
 
