@@ -38,47 +38,43 @@ export const Canvas = () => {
   const { MainGraph, explorePath } = useContext(MainContext);
   const [data, setData] = useState(graph);
   const [tableData, setTableData] = useState<Array<TableLineProps>>([]);
-  const [iterator, setIterator] = useState(0);
-  const [updateGraph, setUpdateGraph] = useState(Date.now());
 
-  function animationExplore(e: ExploreProps[]) {
-    if (data.i < e.length) {
-      e.forEach((i) => {
-        const source = data.nodes.find((j) => j.name === i.srcVertex);
-        const target = data.nodes.find((j) => j.name === i.dstVertex);
+  function animationExplore(i: number, e: ExploreProps[]) {
+    if (i < e.length) {
+      // e.forEach((i) => {
+      const source = data.nodes.find((j) => j.name === e[i].srcVertex);
+      const target = data.nodes.find((j) => j.name === e[i].dstVertex);
 
-        const link = data.links.find(
-          (j) => j.source === i.srcVertex && j.target === i.dstVertex
-        );
-        if (!!source && !!target && !!link) {
-          source.color = "#81ff61";
-          target.color = "#81ff61";
-          link.color = "#81ff61";
-        }
-      });
-      // if (!!source && !!target) {
-      //   setTimeout(() => {
+      const link = data.links.find(
+        (j) => j.source === e[i].srcVertex && j.target === e[i].dstVertex
+      );
+      //   if (!!source && !!target && !!link) {
       //     source.color = "#81ff61";
-
-      //     setTimeout(() => {
-      //       target.color = "#81ff61";
-      //       data.i = data.i + 1;
-      //       animationExplore(e);
-      //     }, 500);
-      //   }, 1000);
-      // }
+      //     target.color = "#81ff61";
+      //     link.color = "#81ff61";
+      //   }
+      // });
+      if (!!source && !!target && !!link) {
+        setTimeout(() => {
+          source.color = "#81ff61";
+          setTimeout(() => {
+            target.color = "#81ff61";
+            link.color = "#81ff61";
+            animationExplore(i + 1, e);
+          }, 500);
+        }, 1000);
+      }
     }
   }
 
   useEffect(() => {
     if (explorePath.length > 0) {
-      data.i = 0;
-      animationExplore(explorePath);
+      animationExplore(0, explorePath);
     }
   }, [explorePath]);
 
   useEffect(() => {
-    console.log(MainGraph);
+    // console.log(MainGraph);
     if (typeof MainGraph !== undefined && MainGraph.graph) {
       const g = MainGraph.graph;
       const newData: GraphProps = {
@@ -177,7 +173,7 @@ export const Canvas = () => {
         });
       }
     },
-    [data, data.i]
+    [data, data.nodes.length]
   );
 
   return (
