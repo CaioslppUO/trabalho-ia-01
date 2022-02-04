@@ -1,13 +1,9 @@
-import { Flex, Heading, Box } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
-
 import { MainContext } from "../../contexts/Main";
 import { ArrowBack } from "../ArrowBack/Arrowback";
-import { GraphVisualizer } from "../MainVisuzalizer/GraphVisualizer";
 import { FileSelector } from "../FileSelector/FileSelector";
-import { MenuItem } from "./MenuItem/MenuItem";
 import { process_entry_file } from "../../model/file";
-import { a_star } from "../../model/algorithms/a_start";
 import { MainVisualizer } from "../MainVisuzalizer/MainVisualizer";
 import { VertexSelector } from "../VertexSelector/VertexSelector";
 
