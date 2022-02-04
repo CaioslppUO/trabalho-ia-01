@@ -1,82 +1,76 @@
 import { useEffect, useRef, useState } from "react";
-import { Box, Button } from "@chakra-ui/react";
 
 import * as d3 from "d3";
-import { useD3Svg } from "../../hooks/useD3Svg";
-import "./style.css";
 
-const width = 800;
-const height = 500;
-const r = 20;
+export type GraphVisualizerProps = {
+  width?: number;
+  height?: number;
+  r?: number;
+  showData?: GraphVisualizerElement;
+};
 
-export const Canvas2 = () => {
+export type GraphVisualizerElement = {
+  nodes: Array<{
+    x: number;
+    y: number;
+    vy: number;
+    vx: number;
+    color: string;
+    name: string;
+    id: string;
+  }>;
+  links: Array<{
+    source: string;
+    target: string;
+    color: string;
+    weight: number;
+  }>;
+};
+
+/**
+ * Componente que imprime na tela uma representação de grafos em canvas
+ * @returns React component
+ */
+export const GraphVisualizer = ({
+  height = 500,
+  width = 800,
+  r = 15,
+  showData,
+}: GraphVisualizerProps) => {
   const ref = useRef<SVGSVGElement>(null);
 
   const [svg, setSvg] =
     useState<d3.Selection<SVGSVGElement, unknown, null, undefined>>();
 
-  const [data, setData] = useState({
+  const [data, setData] = useState<GraphVisualizerElement>({
     nodes: [
       {
         id: "a",
         name: "a",
-        color: "gray",
+        color: "#fff",
         x: Math.random() * width,
         y: Math.random() * height,
+        vx: 0,
+        vy: 0,
       },
       {
         id: "b",
         name: "b",
-        color: "gray",
+        color: "#fff",
         x: Math.random() * width,
         y: Math.random() * height,
-      },
-      {
-        id: "c",
-        name: "c",
-        color: "gray",
-        x: Math.random() * width,
-        y: Math.random() * height,
-      },
-      {
-        id: "d",
-        name: "d",
-        color: "gray",
-        x: Math.random() * width,
-        y: Math.random() * height,
-      },
-      {
-        id: "e",
-        name: "e",
-        color: "gray",
-        x: Math.random() * width,
-        y: Math.random() * height,
-      },
-      {
-        id: "g",
-        name: "g",
-        color: "gray",
-        x: Math.random() * width,
-        y: Math.random() * height,
-      },
-      {
-        id: "f",
-        name: "f",
-        color: "gray",
-        x: Math.random() * width,
-        y: Math.random() * height,
+        vx: 0,
+        vy: 0,
       },
     ],
-    links: [
-      { source: "a", target: "b", color: "purple" },
-      { source: "a", target: "c", color: "purple" },
-      { source: "b", target: "d", color: "purple" },
-      { source: "d", target: "e", color: "purple" },
-      { source: "e", target: "f", color: "purple" },
-      { source: "c", target: "g", color: "purple" },
-      { source: "g", target: "f", color: "purple" },
-    ],
+    links: [{ source: "a", target: "b", color: "purple", weight: 10 }],
   });
+
+  useEffect(() => {
+    if (!!showData) {
+      setData(showData);
+    }
+  }, [showData]);
 
   const simulation = d3
     .forceSimulation(data.nodes)
@@ -173,9 +167,11 @@ export const Canvas2 = () => {
           return rY;
         })
         .attr("class", "link-class")
-        .attr("marker-end", "url(#arrowhead)");
-
-      console.log(svg);
+        .attr("marker-end", (d) =>
+          d.color === "purple"
+            ? "url(#arrowhead-purple)"
+            : "url(#arrowhead-black)"
+        );
 
       const node = svg
         .append("g")
@@ -185,7 +181,7 @@ export const Canvas2 = () => {
         .selectAll(".node")
         .data(data.nodes)
         .join("circle")
-        .attr("fill", () => "#FFF")
+        .attr("fill", (d) => d.color)
         .attr("stroke", () => "purple")
         .attr("r", r)
         // @ts-ignore
@@ -199,8 +195,8 @@ export const Canvas2 = () => {
         .data(data.nodes)
         .join("text")
         .text((d) => d.name)
-        .attr("x", (d) => d.x + 2 * r)
-        .attr("y", (d) => d.y + 2 * r)
+        .attr("x", (d) => d.x + r)
+        .attr("y", (d) => d.y + r)
         .attr("class", "label");
 
       simulation.on("tick", () => {
@@ -260,105 +256,49 @@ export const Canvas2 = () => {
             }
           });
 
-        labels.attr("x", (d) => d.x + 2 * r).attr("y", (d) => d.y + 2 * r);
+        labels.attr("x", (d) => d.x + r).attr("y", (d) => d.y + r);
       });
     }
-  }, [data, ref.current]);
+  }, [data, ref.current, height, r, width]);
 
   return (
-    <Box border="5px solid magenta">
-      <div id="divv">
-        <svg
-          id="svg-here"
-          style={{
-            height: 500,
-            width: 800,
-            marginRight: "0px",
-            marginLeft: "0px",
-          }}
-          ref={ref}
-        >
-          <defs>
-            <marker
-              id="arrowhead"
-              markerWidth="10"
-              markerHeight="7"
-              refX="4"
-              refY="3.5"
-              orient="auto"
-            >
-              <polygon points="0 1, 4 3.5, 0 6" />
-            </marker>
-          </defs>
-        </svg>
-      </div>
-      <h1>Canvas</h1>
-      <Button
-        onClick={() => {
-          const n = data.nodes.map((i) => i);
-          const l = data.links.map((i) => i);
-
-          n.push({
-            id: "C",
-            name: "C",
-            color: "purple",
-            x: 0,
-            y: 0,
-          });
-          setData({
-            nodes: n,
-            links: l,
-          });
-          console.log(data.nodes);
-        }}
-      >
-        Fun
-      </Button>
-
-      {/* <svg
+    <div>
+      <svg
+        id="svg-here"
         style={{
           height: 500,
           width: 800,
           marginRight: "0px",
           marginLeft: "0px",
         }}
+        ref={ref}
       >
         <defs>
           <marker
-            id="arrowhead"
+            id="arrowhead-purple"
             markerWidth="10"
             markerHeight="7"
-            refX="0"
+            refX="4"
             refY="3.5"
             orient="auto"
+            fill="purple"
           >
-            <polygon points="0 0, 10 3.5, 0 7" />
+            <polygon points="0 1, 4 3.5, 0 6" />
+          </marker>
+
+          <marker
+            id="arrowhead-black"
+            markerWidth="10"
+            markerHeight="7"
+            refX="4"
+            refY="3.5"
+            orient="auto"
+            fill="#805ad5"
+          >
+            <polygon points="0 1, 4 3.5, 0 6" />
           </marker>
         </defs>
-        <line
-          x1="0"
-          y1="50"
-          x2="250"
-          y2="50"
-          stroke="#000"
-          stroke-width="8"
-          marker-end="url(#arrowhead)"
-        />
-      </svg> */}
-    </Box>
+      </svg>
+    </div>
   );
 };
-
-export function _arrow(fromx: any, fromy: any, tox: any, toy: any) {
-  var headlen = 10;
-  var dx = tox - fromx;
-  var dy = toy - fromy;
-  var angle = Math.atan2(dy, dx);
-
-  return {
-    x1: tox - headlen * Math.cos(angle - Math.PI / 6),
-    y1: toy - headlen * Math.sin(angle - Math.PI / 6),
-    x2: tox - headlen * Math.cos(angle + Math.PI / 6),
-    y2: toy - headlen * Math.sin(angle + Math.PI / 6),
-  };
-}
