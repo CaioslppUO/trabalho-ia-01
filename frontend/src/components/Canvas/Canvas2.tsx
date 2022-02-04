@@ -7,7 +7,7 @@ import "./style.css";
 
 const width = 800;
 const height = 500;
-const r = 8;
+const r = 20;
 
 export const Canvas2 = () => {
   const ref = useRef<SVGSVGElement>(null);
@@ -68,13 +68,13 @@ export const Canvas2 = () => {
       },
     ],
     links: [
-      { source: "a", target: "b" },
-      { source: "a", target: "c" },
-      { source: "b", target: "d" },
-      { source: "d", target: "e" },
-      { source: "e", target: "f" },
-      { source: "c", target: "g" },
-      { source: "g", target: "f" },
+      { source: "a", target: "b", color: "purple" },
+      { source: "a", target: "c", color: "purple" },
+      { source: "b", target: "d", color: "purple" },
+      { source: "d", target: "e", color: "purple" },
+      { source: "e", target: "f", color: "purple" },
+      { source: "c", target: "g", color: "purple" },
+      { source: "g", target: "f", color: "purple" },
     ],
   });
 
@@ -136,24 +136,58 @@ export const Canvas2 = () => {
 
       const link = svg
         .append("g")
-        .attr("stroke", "#999")
         .attr("stroke-opacity", 0.6)
         .attr("stroke-width", 3)
+        .attr("id", "links-container")
         .selectAll("line")
         .data(data.links)
-        .join("line");
+        .join("line")
+        .attr("stroke", (d) => d.color)
+        .attr("x2", (l: any) => {
+          var x0 = l.source.x,
+            x1 = l.target.x;
+
+          var c = Math.abs(l.target.x - l.source.x);
+          var b = Math.abs(l.target.y - l.source.y);
+
+          var vX = x1 - x0;
+
+          var t = 1 - r / Math.sqrt(b * b + c * c);
+
+          var rX = x0 + t * vX;
+
+          return rX;
+        })
+        .attr("y2", (l: any) => {
+          var y0 = l.source.y,
+            y1 = l.target.y;
+
+          var c = Math.abs(l.target.x - l.source.x);
+          var b = Math.abs(l.target.y - l.source.y);
+
+          var vY = y1 - y0;
+          var t = 1 - r / Math.sqrt(b * b + c * c);
+
+          var rY = y0 + t * vY;
+
+          return rY;
+        })
+        .attr("class", "link-class")
+        .attr("marker-end", "url(#arrowhead)");
+
+      console.log(svg);
 
       const node = svg
         .append("g")
-        .attr("fill", "gray")
-        .attr("stroke", "gray")
-        .attr("stroke-width", 1.5)
+        .attr("fill", "#FFF")
+        .attr("stroke", "purple")
+        .attr("stroke-width", 2.5)
         .selectAll(".node")
         .data(data.nodes)
         .join("circle")
-        .attr("fill", () => "gray")
-        .attr("stroke", () => "gray")
-        .attr("r", 13)
+        .attr("fill", () => "#FFF")
+        .attr("stroke", () => "purple")
+        .attr("r", r)
         // @ts-ignore
         .call(drag(simulation));
 
@@ -166,7 +200,8 @@ export const Canvas2 = () => {
         .join("text")
         .text((d) => d.name)
         .attr("x", (d) => d.x + 2 * r)
-        .attr("y", (d) => d.y + 2 * r);
+        .attr("y", (d) => d.y + 2 * r)
+        .attr("class", "label");
 
       simulation.on("tick", () => {
         link
@@ -175,9 +210,36 @@ export const Canvas2 = () => {
           // @ts-ignore
           .attr("y1", (d) => d.source.y)
           // @ts-ignore
-          .attr("x2", (d) => d.target.x)
+          .attr("x2", (l: any) => {
+            var x0 = l.source.x,
+              x1 = l.target.x;
+
+            var c = Math.abs(l.target.x - l.source.x);
+            var b = Math.abs(l.target.y - l.source.y);
+
+            var vX = x1 - x0;
+
+            var t = 1 - r / Math.sqrt(b * b + c * c);
+
+            var rX = x0 + t * vX;
+
+            return rX;
+          })
           // @ts-ignore
-          .attr("y2", (d) => d.target.y);
+          .attr("y2", (l: any) => {
+            var y0 = l.source.y,
+              y1 = l.target.y;
+
+            var c = Math.abs(l.target.x - l.source.x);
+            var b = Math.abs(l.target.y - l.source.y);
+
+            var vY = y1 - y0;
+            var t = 1 - r / Math.sqrt(b * b + c * c);
+
+            var rY = y0 + t * vY;
+
+            return rY;
+          });
         node
           .attr("cx", (d) => {
             if (d.x < 0) {
@@ -215,7 +277,20 @@ export const Canvas2 = () => {
             marginLeft: "0px",
           }}
           ref={ref}
-        ></svg>
+        >
+          <defs>
+            <marker
+              id="arrowhead"
+              markerWidth="10"
+              markerHeight="7"
+              refX="4"
+              refY="3.5"
+              orient="auto"
+            >
+              <polygon points="0 1, 4 3.5, 0 6" />
+            </marker>
+          </defs>
+        </svg>
       </div>
       <h1>Canvas</h1>
       <Button
@@ -239,6 +314,51 @@ export const Canvas2 = () => {
       >
         Fun
       </Button>
+
+      {/* <svg
+        style={{
+          height: 500,
+          width: 800,
+          marginRight: "0px",
+          marginLeft: "0px",
+        }}
+      >
+        <defs>
+          <marker
+            id="arrowhead"
+            markerWidth="10"
+            markerHeight="7"
+            refX="0"
+            refY="3.5"
+            orient="auto"
+          >
+            <polygon points="0 0, 10 3.5, 0 7" />
+          </marker>
+        </defs>
+        <line
+          x1="0"
+          y1="50"
+          x2="250"
+          y2="50"
+          stroke="#000"
+          stroke-width="8"
+          marker-end="url(#arrowhead)"
+        />
+      </svg> */}
     </Box>
   );
 };
+
+export function _arrow(fromx: any, fromy: any, tox: any, toy: any) {
+  var headlen = 10;
+  var dx = tox - fromx;
+  var dy = toy - fromy;
+  var angle = Math.atan2(dy, dx);
+
+  return {
+    x1: tox - headlen * Math.cos(angle - Math.PI / 6),
+    y1: toy - headlen * Math.sin(angle - Math.PI / 6),
+    x2: tox - headlen * Math.cos(angle + Math.PI / 6),
+    y2: toy - headlen * Math.sin(angle + Math.PI / 6),
+  };
+}
