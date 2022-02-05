@@ -1,8 +1,8 @@
 import { CreateGraph } from "./structure/adjacency_list";
-import { EuclideanDistance, Vertex, Graph } from "./types/graphTypes";
+import { EuclideanDistance, Vertex, Graph, AdjacencyListItem } from "./types/graphTypes";
 import { a_star } from "./algorithms/a_star";
 
-// const fs = require("fs");
+const fs = require("fs");
 
 /**
  * Representa o conteúdo do arquivo de entrada.
@@ -99,12 +99,19 @@ const extract_h_entry_file_content = (content: string): Array<Vertex> => {
  * @returns Objeto do tipo Graph, preenchido a partir do arquivo de entrada.
  */
 export const process_entry_file = (
-  content: string,
-  h_content: string
+  content: string
 ): Graph => {
   let vertices: Array<Vertex> = [];
-  let entry = extract_entry_file_content(content);
-  let entry_h = extract_h_entry_file_content(h_content);
+  let rooms: string = "", distances: string = "", lines = content.split("\n");
+  for(let line in lines) {
+    if(lines[line].split("pode_ir(").length > 1){
+      rooms += lines[line] + "\n";
+    } else {
+      distances += lines[line] + "\n";
+    }
+  }
+  let entry = extract_entry_file_content(rooms);
+  let entry_h = extract_h_entry_file_content(distances);
 
   // Preenchimento de todos os vértices do grafo.
   let points: Array<string> = [];
@@ -161,18 +168,12 @@ export const process_entry_file = (
 };
 
 // Exemplo de uso
-// fs.readFile('/home/caioslpp/git/trabalho-ia-01/examples/entry.txt', 'utf8' , (err: any, data: any) => {
-//     if (err) {
-//       console.error(err)
-//       return
-//     }
-//     fs.readFile('/home/caioslpp/git/trabalho-ia-01/examples/entry_h.txt', 'utf8' , (err: any, data_2: any) => {
-//         if (err) {
-//           console.error(err)
-//           return
-//         }
-//         let graph = process_entry_file(data, data_2);
-//         let a = a_star(graph).run("a","f");
-//         console.log(a);
-//     })
-// })
+fs.readFile('/home/caioslpp/git/trabalho-ia-01/examples/entry.txt', 'utf8' , (err: any, data: any) => {
+    if (err) {
+      console.error(err)
+      return
+    }
+    let graph = process_entry_file(data);
+    let a = a_star(graph).run("a","f");
+    console.log(a);
+})
