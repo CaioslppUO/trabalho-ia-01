@@ -43,11 +43,11 @@ export interface AdjacencyListItem {
  */
 export interface AStar {
   /**
-    * Função que executa o algoritmo A*.
-    * @param start_vertex Vértice de início do algoritmo.
-    * @param end_vertex Vértice de destino do algoritmo.
+   * Função que executa o algoritmo A*.
+   * @param start_vertex Vértice de início do algoritmo.
+   * @param end_vertex Vértice de destino do algoritmo.
    */
-  run: (start_vertex: string, end_vertex: string) => void;
+  run: (start_vertex: string, end_vertex: string) => AStarOutput;
 }
 
 /**
@@ -155,3 +155,41 @@ export const AdjacencyListItem = (
     edges: LinkedList(),
   };
 };
+
+/**
+ * Representa a resposta dada pelo algoritmo, junto com todas as métricas de desempenho.
+ */
+export interface AStarOutput {
+  straight_path: Array<StraightPath> | null;
+  output: Array<Output>;
+  distance: number;
+  time: number;
+}
+
+/**
+ * Representa o custo de um vértice. Pode ser utilizado para representar g(n), h(n) ou g(n) + h(n).
+ */
+export interface Cost {
+  vertex: string;
+  cost: number;
+}
+
+/**
+ * Representa uma aresta e a distância entre essa aresta.
+ */
+export interface StraightPath {
+  srcVertex: string;
+  dstVertex: string;
+  distance: number;
+}
+
+/**
+ * Representa a saída preliminar do algoritmo.
+ */
+export interface Output {
+  srcVertex: string;
+  dstVertex: string;
+  visited: number;
+  total_distance: number;
+  local_distance: number;
+}

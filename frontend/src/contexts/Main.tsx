@@ -17,6 +17,15 @@ type TableLineProps = {
 export type ExploreProps = {
   dstVertex: string;
   srcVertex: string;
+  local_distance: number;
+  total_distance: number;
+  visited: number;
+};
+
+export type StraightPathProps = {
+  dstVertex: string;
+  srcVertex: string;
+  distance: number;
 };
 
 export type MainObject = {
@@ -34,6 +43,9 @@ export type MainObject = {
   setStartVertex: (v: string) => void;
   endVertex: string;
   setEndVertex: (v: string) => void;
+  straightPath: StraightPathProps[];
+  setStraightPath: (e: StraightPathProps[]) => void;
+  distStraighPath: number;
 };
 export const MainContext = createContext({} as MainObject);
 
@@ -44,6 +56,9 @@ export function MainContextProvider(props: ComponentProps) {
   const [tableData, setTableData] = useState<Array<TableLineProps>>([]);
   const [startVertex, setStartVertex] = useState("");
   const [endVertex, setEndVertex] = useState("");
+  const [distStraighPath, setDistStraightPath] = useState(0);
+
+  const [straightPath, setStraightPath] = useState<StraightPathProps[]>([]);
   const [visualGraph, setVisualGraph] = useState<GraphVisualizerElement>({
     nodes: [],
     links: [],
@@ -56,7 +71,11 @@ export function MainContextProvider(props: ComponentProps) {
       !!MainGraph &&
       !!MainGraph.graph
     ) {
-      setExplorePath(a_star(MainGraph).run(startVertex, endVertex) as any);
+      console.log(a_star(MainGraph).run(startVertex, endVertex) as any);
+      const result = a_star(MainGraph).run(startVertex, endVertex);
+      setExplorePath(result.output);
+      setStraightPath(result.straight_path as any);
+      setDistStraightPath(result.distance);
     }
   }, [endVertex]);
 
@@ -131,6 +150,9 @@ export function MainContextProvider(props: ComponentProps) {
         setStartVertex,
         endVertex,
         setEndVertex,
+        straightPath,
+        setStraightPath,
+        distStraighPath,
       }}
     >
       {props.children}
