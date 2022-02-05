@@ -138,11 +138,12 @@ export const GraphVisualizer = ({
         .join("line")
         .attr("stroke", (d) => d.color)
         .attr("class", "link-class")
-        .attr("marker-end", (d) =>
-          d.color === "purple"
-            ? "url(#arrowhead-purple)"
-            : "url(#arrowhead-black)"
-        );
+        .attr("marker-end", "url(#arrowhead-purple)");
+      // .attr("marker-end", (d) =>
+      //   d.color === "purple"
+      //     ? "url(#arrowhead-purple)"
+      //     : "url(#arrowhead-black)"
+      // );
       // .attr("x2", (l: any) => {
       //   var x0 = l.source.x,
       //     x1 = l.target.x;
@@ -182,7 +183,7 @@ export const GraphVisualizer = ({
         .data(data.nodes)
         .join("circle")
         .attr("fill", (d) => d.color)
-        .attr("stroke", () => "purple")
+        .attr("stroke", () => "#805AD5")
         .attr("r", r)
         // @ts-ignore
         .call(drag(simulation));
@@ -286,7 +287,7 @@ export const GraphVisualizer = ({
             refX="9"
             refY="3.5"
             orient="auto"
-            fill="purple"
+            fill="#805AD5"
           >
             <polygon points="0 1, 4 3.5, 0 6" />
           </marker>
@@ -298,7 +299,7 @@ export const GraphVisualizer = ({
             refX="4"
             refY="3.5"
             orient="auto"
-            fill="#805ad5"
+            fill="black"
           >
             <polygon points="0 1, 4 3.5, 0 6" />
           </marker>

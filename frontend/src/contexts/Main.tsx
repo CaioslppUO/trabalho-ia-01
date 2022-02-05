@@ -50,7 +50,7 @@ export type MainObject = {
 export const MainContext = createContext({} as MainObject);
 
 export function MainContextProvider(props: ComponentProps) {
-  const [tab, setTab] = useState(2);
+  const [tab, setTab] = useState(0);
   const [MainGraph, setMainGraph] = useState<Graph>({} as Graph);
   const [explorePath, setExplorePath] = useState<ExploreProps[]>([]);
   const [tableData, setTableData] = useState<Array<TableLineProps>>([]);
@@ -71,7 +71,6 @@ export function MainContextProvider(props: ComponentProps) {
       !!MainGraph &&
       !!MainGraph.graph
     ) {
-      console.log(a_star(MainGraph).run(startVertex, endVertex) as any);
       const result = a_star(MainGraph).run(startVertex, endVertex);
       setExplorePath(result.output);
       setStraightPath(result.straight_path as any);
@@ -86,7 +85,7 @@ export function MainContextProvider(props: ComponentProps) {
         return {
           x: 0,
           y: 0,
-          color: "#FFF",
+          color: "#b9bcd6",
           name: n.vertex.name,
           id: n.vertex.name,
           vx: 0,
@@ -107,7 +106,7 @@ export function MainContextProvider(props: ComponentProps) {
             weight: a.weight,
             source: l.vertex.name,
             target: a.dstVertex,
-            color: "purple",
+            color: "#b9bcd6",
           });
         });
       });

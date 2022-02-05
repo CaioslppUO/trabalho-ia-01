@@ -1,8 +1,13 @@
 import { CreateGraph } from "./structure/adjacency_list";
-import { EuclideanDistance, Vertex, Graph, AdjacencyListItem } from "./types/graphTypes";
+import {
+  EuclideanDistance,
+  Vertex,
+  Graph,
+  AdjacencyListItem,
+} from "./types/graphTypes";
 import { a_star } from "./algorithms/a_star";
 
-const fs = require("fs");
+// const fs = require("fs");
 
 /**
  * Representa o conteúdo do arquivo de entrada.
@@ -98,13 +103,13 @@ const extract_h_entry_file_content = (content: string): Array<Vertex> => {
  * @param h_content Conteúdo do arquivo de entrada das distâncias euclidianas.
  * @returns Objeto do tipo Graph, preenchido a partir do arquivo de entrada.
  */
-export const process_entry_file = (
-  content: string
-): Graph => {
+export const process_entry_file = (content: string): Graph => {
   let vertices: Array<Vertex> = [];
-  let rooms: string = "", distances: string = "", lines = content.split("\n");
-  for(let line in lines) {
-    if(lines[line].split("pode_ir(").length > 1){
+  let rooms: string = "",
+    distances: string = "",
+    lines = content.split("\n");
+  for (let line in lines) {
+    if (lines[line].split("pode_ir(").length > 1) {
       rooms += lines[line] + "\n";
     } else {
       distances += lines[line] + "\n";
@@ -168,12 +173,12 @@ export const process_entry_file = (
 };
 
 // Exemplo de uso
-fs.readFile('/home/caioslpp/git/trabalho-ia-01/examples/entry.txt', 'utf8' , (err: any, data: any) => {
-    if (err) {
-      console.error(err)
-      return
-    }
-    let graph = process_entry_file(data);
-    let a = a_star(graph).run("a","f");
-    console.log(a);
-})
+// fs.readFile('/home/caioslpp/git/trabalho-ia-01/examples/entry.txt', 'utf8' , (err: any, data: any) => {
+//     if (err) {
+//       console.error(err)
+//       return
+//     }
+//     let graph = process_entry_file(data);
+//     let a = a_star(graph).run("a","f");
+//     console.log(a);
+// })
