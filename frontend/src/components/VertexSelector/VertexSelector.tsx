@@ -40,7 +40,7 @@ export const VertexSelector = ({
       </Flex>
 
       <Box w="50%">
-        <GraphVisualizer showData={visualGraph} />
+        <GraphVisualizer width={600} showData={visualGraph} />
       </Box>
     </Flex>
   );

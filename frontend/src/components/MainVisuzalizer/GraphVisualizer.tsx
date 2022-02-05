@@ -137,41 +137,41 @@ export const GraphVisualizer = ({
         .data(data.links)
         .join("line")
         .attr("stroke", (d) => d.color)
-        .attr("x2", (l: any) => {
-          var x0 = l.source.x,
-            x1 = l.target.x;
-
-          var c = Math.abs(l.target.x - l.source.x);
-          var b = Math.abs(l.target.y - l.source.y);
-
-          var vX = x1 - x0;
-
-          var t = 1 - r / Math.sqrt(b * b + c * c);
-
-          var rX = x0 + t * vX;
-
-          return rX;
-        })
-        .attr("y2", (l: any) => {
-          var y0 = l.source.y,
-            y1 = l.target.y;
-
-          var c = Math.abs(l.target.x - l.source.x);
-          var b = Math.abs(l.target.y - l.source.y);
-
-          var vY = y1 - y0;
-          var t = 1 - r / Math.sqrt(b * b + c * c);
-
-          var rY = y0 + t * vY;
-
-          return rY;
-        })
         .attr("class", "link-class")
         .attr("marker-end", (d) =>
           d.color === "purple"
             ? "url(#arrowhead-purple)"
             : "url(#arrowhead-black)"
         );
+      // .attr("x2", (l: any) => {
+      //   var x0 = l.source.x,
+      //     x1 = l.target.x;
+
+      //   var c = Math.abs(l.target.x - l.source.x);
+      //   var b = Math.abs(l.target.y - l.source.y);
+
+      //   var vX = x1 - x0;
+
+      //   var t = 1 - r / Math.sqrt(b * b + c * c);
+
+      //   var rX = x0 + t * vX;
+
+      //   return rX;
+      // })
+      // .attr("y2", (l: any) => {
+      //   var y0 = l.source.y,
+      //     y1 = l.target.y;
+
+      //   var c = Math.abs(l.target.x - l.source.x);
+      //   var b = Math.abs(l.target.y - l.source.y);
+
+      //   var vY = y1 - y0;
+      //   var t = 1 - r / Math.sqrt(b * b + c * c);
+
+      //   var rY = y0 + t * vY;
+
+      //   return rY;
+      // })
 
       const node = svg
         .append("g")
@@ -199,6 +199,26 @@ export const GraphVisualizer = ({
         .attr("y", (d) => d.y + r)
         .attr("class", "label");
 
+      const labels2 = svg
+        .append("g")
+        .selectAll("label2")
+        .data(data.links)
+        .join("text")
+        .text((d) => d.weight)
+        .attr("stroke", "#4d4d4d5e")
+        .attr("font-size", 10)
+        .attr("x", (d) => {
+          // @ts-ignore
+          const x = Math.abs(d.target.x + d.source.x) / 2;
+          return x;
+        })
+        .attr("y", (d) => {
+          // @ts-ignore
+          const y = Math.abs(d.target.y + d.source.y) / 2;
+          return y;
+        })
+        .attr("class", "label");
+
       simulation.on("tick", () => {
         link
           // @ts-ignore
@@ -206,41 +226,14 @@ export const GraphVisualizer = ({
           // @ts-ignore
           .attr("y1", (d) => d.source.y)
           // @ts-ignore
-          .attr("x2", (l: any) => {
-            var x0 = l.source.x,
-              x1 = l.target.x;
-
-            var c = Math.abs(l.target.x - l.source.x);
-            var b = Math.abs(l.target.y - l.source.y);
-
-            var vX = x1 - x0;
-
-            var t = 1 - r / Math.sqrt(b * b + c * c);
-
-            var rX = x0 + t * vX;
-
-            return rX;
-          })
-          // @ts-ignore
-          .attr("y2", (l: any) => {
-            var y0 = l.source.y,
-              y1 = l.target.y;
-
-            var c = Math.abs(l.target.x - l.source.x);
-            var b = Math.abs(l.target.y - l.source.y);
-
-            var vY = y1 - y0;
-            var t = 1 - r / Math.sqrt(b * b + c * c);
-
-            var rY = y0 + t * vY;
-
-            return rY;
-          });
+          .attr("x2", (l: any) => l.target.x)
+          //@ts-ignore
+          .attr("y2", (l: any) => l.target.y);
         node
           .attr("cx", (d) => {
             if (d.x < 0) {
               return 0 + r;
-            } else if (d.x > width) {
+            } else if (d.x > width + r) {
               return width - r;
             } else {
               return d.x;
@@ -257,6 +250,18 @@ export const GraphVisualizer = ({
           });
 
         labels.attr("x", (d) => d.x + r).attr("y", (d) => d.y + r);
+
+        labels2
+          .attr("x", (d) => {
+            // @ts-ignore
+            const x = Math.abs(d.target.x + d.source.x) / 2;
+            return x;
+          })
+          .attr("y", (d) => {
+            // @ts-ignore
+            const y = Math.abs(d.target.y + d.source.y) / 2;
+            return y;
+          });
       });
     }
   }, [data, ref.current, height, r, width]);
@@ -278,7 +283,7 @@ export const GraphVisualizer = ({
             id="arrowhead-purple"
             markerWidth="10"
             markerHeight="7"
-            refX="4"
+            refX="9"
             refY="3.5"
             orient="auto"
             fill="purple"

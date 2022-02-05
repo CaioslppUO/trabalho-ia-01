@@ -8,7 +8,7 @@ import { MainVisualizer } from "../MainVisuzalizer/MainVisualizer";
 import { VertexSelector } from "../VertexSelector/VertexSelector";
 
 const h =
-  "pode_ir(a, b, 100)\npode_ir(a, c, 50)\npode_ir(b, d, 150)\npode_ir(d, e, 200)\npode_ir(e, f, 100)\npode_ir(c, g, 100)\npode_ir(g, f, 150)";
+  "pode_ir(a, b, 100)\npode_ir(c, a, 50)\npode_ir(b, d, 150)\npode_ir(d, e, 200)\npode_ir(e, f, 100)\npode_ir(c, g, 100)\npode_ir(g, f, 150)";
 const e_h =
   "dist_euclidiana(a, b, 50)\ndist_euclidiana(a, c, 30)\ndist_euclidiana(a, d, 100)\ndist_euclidiana(a, e, 350)\ndist_euclidiana(a, f, 300)\ndist_euclidiana(a, g, 100)\ndist_euclidiana(b, c, 120)\ndist_euclidiana(b, d, 100)\ndist_euclidiana(b, e, 200)\ndist_euclidiana(b, f, 90)\ndist_euclidiana(b, g, 200)\ndist_euclidiana(c, d, 300)\ndist_euclidiana(c, e, 400)\ndist_euclidiana(c, f, 180)\ndist_euclidiana(c, g, 70)\ndist_euclidiana(d, e, 160)\ndist_euclidiana(d, f, 250)\ndist_euclidiana(d, g, 120)\ndist_euclidiana(e, f, 50)\ndist_euclidiana(e, g, 220)\ndist_euclidiana(f, g, 120) ";
 
@@ -29,7 +29,7 @@ export const Menu = () => {
       alignItems="center"
       flexDirection="column"
     >
-      {tab !== 0 && <ArrowBack onClick={() => setTab(0)} />}
+      {tab !== 0 && <ArrowBack onClick={() => setTab(tab > 1 ? tab - 1 : 0)} />}
       {tab === 0 && (
         <FileSelector
           title="Selecione o arquivo de: Salas"
