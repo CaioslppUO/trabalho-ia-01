@@ -100,7 +100,6 @@ const extract_h_entry_file_content = (content: string): Array<Vertex> => {
 /**
  * Realiza o processamento do arquivo de entrada para o programa, separando as variáveis de entrada e as alocando em uma estrutura de grafo.
  * @param content Conteúdo do arquivo de entrada.
- * @param h_content Conteúdo do arquivo de entrada das distâncias euclidianas.
  * @returns Objeto do tipo Graph, preenchido a partir do arquivo de entrada.
  */
 export const process_entry_file = (content: string): Graph => {
