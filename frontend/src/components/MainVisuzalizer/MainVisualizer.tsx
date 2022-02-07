@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { Box, Button, Flex, Text, Divider } from "@chakra-ui/react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import { GraphVisualizer } from "./GraphVisualizer";
-import { MainContext } from "../../contexts/Main";
+import { ExploreProps, MainContext } from "../../contexts/Main";
 
 export const MainVisualizer = () => {
   const {
@@ -17,7 +17,9 @@ export const MainVisualizer = () => {
 
   const [distTotal, setDistTotal] = useState(0);
   const [visited, setVisited] = useState(0);
-  const [currentPath, setCurrentPath] = useState(0);
+
+  const [stepsBack, setStepsBack] = useState<ExploreProps[]>([]);
+
   const [showDistStraightPath, setShowDistStraightPath] = useState(false);
 
   function showAllProcess() {
@@ -57,11 +59,11 @@ export const MainVisualizer = () => {
   }
 
   function showNextStep() {
-    if (explorePath.length > 0 && currentPath < explorePath.length) {
+    if (explorePath.length > 0) {
       const nodes = visualGraph.nodes.map((n) => {
         if (
-          explorePath[currentPath].srcVertex === n.name ||
-          explorePath[currentPath].dstVertex === n.name
+          explorePath[0].srcVertex === n.name ||
+          explorePath[0].dstVertex === n.name
         ) {
           n.color = "#805ad5";
         }
@@ -71,20 +73,22 @@ export const MainVisualizer = () => {
       const links = visualGraph.links.map((n) => {
         if (
           // @ts-ignore
-          explorePath[currentPath].srcVertex === n.source.name &&
+          explorePath[0].srcVertex === n.source.name &&
           // @ts-ignore
-          explorePath[currentPath].dstVertex === n.target.name
+          explorePath[0].dstVertex === n.target.name
         ) {
           n.color = "#805ad5";
         }
 
         return n;
       });
-      setVisited(explorePath[currentPath].visited);
-      setDistTotal(explorePath[currentPath].total_distance);
+      setVisited(explorePath[0].visited);
+      setDistTotal(explorePath[0].total_distance);
 
-      if (currentPath < explorePath.length) {
-        setCurrentPath(currentPath + 1);
+      const item = explorePath.shift();
+
+      if (!!item) {
+        stepsBack.unshift(item);
       }
 
       setVisualGraph({
@@ -97,9 +101,9 @@ export const MainVisualizer = () => {
   }
 
   function showStepBack() {
-    if (currentPath >= 1) {
+    if (stepsBack.length > 0) {
       const nodes = visualGraph.nodes.map((n) => {
-        if (explorePath[currentPath - 1].dstVertex === n.name) {
+        if (stepsBack[0].dstVertex === n.name) {
           n.color = "#b9bcd6";
         }
         return n;
@@ -108,20 +112,23 @@ export const MainVisualizer = () => {
       const links = visualGraph.links.map((n) => {
         if (
           // @ts-ignore
-          explorePath[currentPath - 1].srcVertex === n.source.name &&
+          stepsBack[0].srcVertex === n.source.name &&
           // @ts-ignore
-          explorePath[currentPath - 1].dstVertex === n.target.name
+          stepsBack[0].dstVertex === n.target.name
         ) {
           n.color = "#b9bcd6";
         }
 
         return n;
       });
-      setVisited(explorePath[currentPath].visited);
-      setDistTotal(explorePath[currentPath].total_distance);
+      setVisited(stepsBack[0].visited);
+      setDistTotal(stepsBack[0].total_distance);
 
-      if (currentPath >= 1) {
-        setCurrentPath(currentPath - 1);
+      const item = stepsBack.shift();
+
+      if (!!item) {
+        explorePath.unshift(item);
+        console.log(stepsBack);
       }
 
       setVisualGraph({
