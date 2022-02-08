@@ -8,8 +8,14 @@ import { MainVisualizer } from "../MainVisuzalizer/MainVisualizer";
 import { VertexSelector } from "../VertexSelector/VertexSelector";
 
 export const Menu = () => {
-  const { setTab, tab, setMainGraph, setStartVertex, setEndVertex } =
-    useContext(MainContext);
+  const {
+    setTab,
+    tab,
+    setMainGraph,
+    setStartVertex,
+    setEndVertex,
+    clearVisualGraph,
+  } = useContext(MainContext);
 
   return (
     <Flex
@@ -19,7 +25,14 @@ export const Menu = () => {
       alignItems="center"
       flexDirection="column"
     >
-      {tab !== 0 && <ArrowBack onClick={() => setTab(tab > 1 ? tab - 1 : 0)} />}
+      {tab !== 0 && (
+        <ArrowBack
+          onClick={() => {
+            clearVisualGraph();
+            setTab(tab > 1 ? tab - 1 : 0);
+          }}
+        />
+      )}
       {tab === 0 && (
         <FileSelector
           title="Selecione o arquivo de entrada"

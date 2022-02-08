@@ -1,8 +1,17 @@
 import { useContext, useState } from "react";
 import { Box, Button, Flex, Text, Divider } from "@chakra-ui/react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
-import { GraphVisualizer } from "./GraphVisualizer";
+import { GraphVisualizer } from "../GraphVisuzlizer/GraphVisualizer";
 import { ExploreProps, MainContext } from "../../contexts/Main";
+import {
+  borderColor,
+  edgeColor,
+  edgeStraightPathColor,
+  edgeVisitedColor,
+  vertexColor,
+  vertexStraightPathColor,
+  vertexVisitedColor,
+} from "../../styles/graph";
 
 export const MainVisualizer = () => {
   const {
@@ -65,19 +74,20 @@ export const MainVisualizer = () => {
           explorePath[0].srcVertex === n.name ||
           explorePath[0].dstVertex === n.name
         ) {
-          n.color = "#805ad5";
+          n.color = vertexVisitedColor;
         }
         return n;
       });
 
       const links = visualGraph.links.map((n) => {
+        console.log(n);
         if (
           // @ts-ignore
           explorePath[0].srcVertex === n.source.name &&
           // @ts-ignore
           explorePath[0].dstVertex === n.target.name
         ) {
-          n.color = "#805ad5";
+          n.color = edgeVisitedColor;
         }
 
         return n;
@@ -104,7 +114,7 @@ export const MainVisualizer = () => {
     if (stepsBack.length > 0) {
       const nodes = visualGraph.nodes.map((n) => {
         if (stepsBack[0].dstVertex === n.name) {
-          n.color = "#b9bcd6";
+          n.color = vertexColor;
         }
         return n;
       });
@@ -116,7 +126,7 @@ export const MainVisualizer = () => {
           // @ts-ignore
           stepsBack[0].dstVertex === n.target.name
         ) {
-          n.color = "#b9bcd6";
+          n.color = edgeColor;
         }
 
         return n;
@@ -144,7 +154,7 @@ export const MainVisualizer = () => {
         straightPath.find((e) => e.dstVertex === n.name) ||
         n.name === startVertex
       ) {
-        n.color = "#6cfd8c";
+        n.color = vertexStraightPathColor;
       }
       return n;
     });
@@ -157,7 +167,7 @@ export const MainVisualizer = () => {
             e.srcVertex === n.source.name && e.dstVertex === n.target.name
         )
       ) {
-        n.color = "#6cfd8c";
+        n.color = edgeStraightPathColor;
       }
 
       return n;
@@ -172,7 +182,7 @@ export const MainVisualizer = () => {
   }
 
   return (
-    <Flex>
+    <Flex paddingY={"5vh"}>
       <Flex flexDirection={"column"}>
         <Flex justifyContent={"space-between"}>
           <Flex marginBottom={"5px"} alignItems={"center"} paddingX={"10px"}>
@@ -184,56 +194,85 @@ export const MainVisualizer = () => {
               Dist. menor caminho: {showDistStraightPath ? distStraighPath : 0}
             </Text>
           </Flex>
+        </Flex>
+        <Flex flexDirection={"column"} marginBottom={"5px"}>
+          <GraphVisualizer showData={visualGraph} />
 
-          <Flex marginBottom={"5px"} alignItems={"center"} paddingX={"10px"}>
-            <Flex alignItems={"center"} marginRight={"10px"}>
-              <Text marginX="5px">Não visitado</Text>
-              <Box
-                w="30px"
-                h="30px"
-                bg="#b9bcd6"
-                border="2px solid #805ad5"
-                borderRadius={"30px"}
-              />
+          <Flex justifyContent={"space-between"} marginY="20px" w="100%">
+            <Flex>
+              <Button
+                onClick={showAllProcess}
+                marginRight="10px"
+                key="0"
+                colorScheme={"purple"}
+                size={"sm"}
+              >
+                Mostrar resultado completo
+              </Button>
+              <Button
+                marginRight="10px"
+                onClick={showNextStep}
+                key="1"
+                colorScheme={"green"}
+                size={"sm"}
+              >
+                Mostrar próximo passo
+              </Button>
+              <Button
+                size={"sm"}
+                onClick={showStepBack}
+                key="1"
+                colorScheme={"green"}
+              >
+                Mostrar passo anterior
+              </Button>
             </Flex>
-            <Divider orientation="vertical" />
-            <Flex alignItems={"center"} marginRight={"10px"}>
-              <Text marginX="5px">Visitado</Text>
-              <Box
-                w="30px"
-                h="30px"
-                bg="#805ad5"
-                border="2px solid #805ad5"
-                borderRadius={"30px"}
-              />
-            </Flex>
-            <Divider orientation="vertical" />
 
-            <Flex alignItems={"center"}>
-              <Text marginX="5px">Menor caminho</Text>
-              <Box
-                w="30px"
-                h="30px"
-                bg="#6cfd8c"
-                border="2px solid #805ad5"
-                borderRadius={"30px"}
-              />
+            <Flex marginBottom={"5px"} alignItems={"center"} paddingX={"10px"}>
+              <Flex alignItems={"center"} marginRight={"10px"}>
+                <Text marginX="5px">Não visitado</Text>
+                <Box
+                  w="30px"
+                  h="30px"
+                  bg={vertexColor}
+                  border={`2px solid ${borderColor}`}
+                  borderRadius={"30px"}
+                />
+              </Flex>
+              <Divider orientation="vertical" />
+              <Flex alignItems={"center"} marginRight={"10px"}>
+                <Text marginX="5px">Visitado</Text>
+                <Box
+                  w="30px"
+                  h="30px"
+                  bg={vertexVisitedColor}
+                  border={`2px solid ${borderColor}`}
+                  borderRadius={"30px"}
+                />
+              </Flex>
+              <Divider orientation="vertical" />
+
+              <Flex alignItems={"center"}>
+                <Text marginX="5px">Menor caminho</Text>
+                <Box
+                  w="30px"
+                  h="30px"
+                  bg={vertexStraightPathColor}
+                  border={`2px solid ${borderColor}`}
+                  borderRadius={"30px"}
+                />
+              </Flex>
             </Flex>
           </Flex>
-        </Flex>
-        <Flex marginBottom={"5px"} border="3px solid #eeea">
-          <GraphVisualizer showData={visualGraph} />
-          <Box h="100%" borderRight="3px solid #eeea" />
+          <Text>Distâncias Euclidianas</Text>
           <Flex
             flexDirection={"column"}
-            marginLeft="30px"
             overflowY="scroll"
-            width="300px"
-            height="500px"
+            width="100%"
+            h="50vh"
             alignItems={"center"}
           >
-            <Text>Distâncias Euclidianas</Text>
-            <Table variant="simple">
+            <Table variant="striped">
               <Thead>
                 <Tr>
                   <Th>de</Th>
@@ -253,27 +292,6 @@ export const MainVisualizer = () => {
               </Tbody>
             </Table>
           </Flex>
-        </Flex>
-        <Flex w="100%">
-          <Button
-            onClick={showAllProcess}
-            marginRight="10px"
-            key="0"
-            colorScheme={"purple"}
-          >
-            Mostrar resultado completo
-          </Button>
-          <Button
-            marginRight="10px"
-            onClick={showNextStep}
-            key="1"
-            colorScheme={"blackAlpha"}
-          >
-            Mostrar próximo passo
-          </Button>
-          <Button onClick={showStepBack} key="1" colorScheme={"blackAlpha"}>
-            Mostrar passo anterior
-          </Button>
         </Flex>
       </Flex>
     </Flex>

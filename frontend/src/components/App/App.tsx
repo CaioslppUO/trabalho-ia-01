@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, FlexProps } from "@chakra-ui/react";
+import { Box, BoxProps } from "@chakra-ui/react";
 import { Menu } from "../Menu/Menu";
 import { MainContextProvider } from "../../contexts/Main";
 
@@ -11,9 +11,9 @@ function App() {
   return (
     <div className="App">
       <MainContextProvider>
-        <Flex {...containerStyle}>
+        <Box {...containerStyle}>
           <Menu />
-        </Flex>
+        </Box>
       </MainContextProvider>
     </div>
   );
@@ -22,12 +22,7 @@ function App() {
 export default App;
 
 // Estilo do container da aplicação
-const containerStyle: FlexProps = {
-  align: "center",
-  justifyContent: "center",
-  flexDirection: "column",
-  w: "100vw",
+const containerStyle: BoxProps = {
   maxWidth: "1920px",
   marginX: "auto",
-  h: "100vh",
 };

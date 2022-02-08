@@ -1,7 +1,7 @@
 import { Flex, Heading, Box } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import { MainContext } from "../../contexts/Main";
-import { GraphVisualizer } from "../MainVisuzalizer/GraphVisualizer";
+import { GraphVisualizer } from "../GraphVisuzlizer/GraphVisualizer";
 import { MenuItem } from "../Menu/MenuItem/MenuItem";
 
 export const VertexSelector = ({
@@ -12,7 +12,7 @@ export const VertexSelector = ({
 
   return (
     <Flex
-      width="90vw"
+      width="100vw"
       maxWidth={"90vw"}
       overflowY={"scroll"}
       css={{
@@ -21,15 +21,16 @@ export const VertexSelector = ({
         },
       }}
       alignItems={"center"}
+      flexDirection={"column"}
+      paddingY={"20vh"}
     >
-      <Flex w="50%" flexDirection="column" alignItems={"center"}>
+      <Flex w="70%" flexDirection="column" alignItems={"center"}>
         <Heading marginBottom="30px">{title}</Heading>
         <Flex justifyContent={"center"} wrap={"wrap"} w="100%">
           {MainGraph.graph &&
             MainGraph.graph.map((i) => {
               return (
                 <MenuItem
-                  width={"100px"}
                   key={i.vertex.name}
                   title={i.vertex.name}
                   onClick={() => onSelect(i.vertex.name)}
@@ -39,9 +40,7 @@ export const VertexSelector = ({
         </Flex>
       </Flex>
 
-      <Box w="50%">
-        <GraphVisualizer width={600} showData={visualGraph} />
-      </Box>
+      <GraphVisualizer showData={visualGraph} />
     </Flex>
   );
 };

@@ -17,7 +17,7 @@ export const MenuItem = ({
 }: MenuItemProps) => {
   return (
     <Flex alignItems="center" marginX="10px" marginBottom="20px" {...props}>
-      <Button onClick={onClick} w="300px" colorScheme="purple">
+      <Button onClick={onClick} minWidth={"100px"} colorScheme="purple">
         {title}
       </Button>
     </Flex>

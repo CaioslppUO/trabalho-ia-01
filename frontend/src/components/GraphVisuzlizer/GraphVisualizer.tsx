@@ -1,6 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 
 import * as d3 from "d3";
+import {
+  borderColor,
+  edgeLabelColor,
+  vertexLabelColor,
+} from "../../styles/graph";
+
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height,
+  };
+}
 
 export type GraphVisualizerProps = {
   width?: number;
@@ -31,13 +44,12 @@ export type GraphVisualizerElement = {
  * Componente que imprime na tela uma representação de grafos em canvas
  * @returns React component
  */
-export const GraphVisualizer = ({
-  height = 500,
-  width = 800,
-  r = 15,
-  showData,
-}: GraphVisualizerProps) => {
+export const GraphVisualizer = ({ r = 15, showData }: GraphVisualizerProps) => {
   const ref = useRef<SVGSVGElement>(null);
+
+  const window = getWindowDimensions();
+  const [width, setWidth] = useState(1920);
+  const [height, setHeight] = useState(1080);
 
   const [svg, setSvg] =
     useState<d3.Selection<SVGSVGElement, unknown, null, undefined>>();
@@ -86,7 +98,7 @@ export const GraphVisualizer = ({
     .force("charge", d3.forceManyBody().strength(-1900))
     .force("x", d3.forceX(width / 2))
     .force("y", d3.forceY(height / 2))
-    .force("collide", d3.forceCollide(r + 10));
+    .force("collide", d3.forceCollide(r));
 
   useEffect(() => {
     if (typeof svg === "undefined" && ref.current) {
@@ -101,6 +113,7 @@ export const GraphVisualizer = ({
     }
 
     if (!!svg) {
+      console.log(svg.attr("width"));
       svg.selectAll("*").remove();
 
       const drag = (simulation: any) => {
@@ -139,40 +152,6 @@ export const GraphVisualizer = ({
         .attr("stroke", (d) => d.color)
         .attr("class", "link-class")
         .attr("marker-end", "url(#arrowhead-purple)");
-      // .attr("marker-end", (d) =>
-      //   d.color === "purple"
-      //     ? "url(#arrowhead-purple)"
-      //     : "url(#arrowhead-black)"
-      // );
-      // .attr("x2", (l: any) => {
-      //   var x0 = l.source.x,
-      //     x1 = l.target.x;
-
-      //   var c = Math.abs(l.target.x - l.source.x);
-      //   var b = Math.abs(l.target.y - l.source.y);
-
-      //   var vX = x1 - x0;
-
-      //   var t = 1 - r / Math.sqrt(b * b + c * c);
-
-      //   var rX = x0 + t * vX;
-
-      //   return rX;
-      // })
-      // .attr("y2", (l: any) => {
-      //   var y0 = l.source.y,
-      //     y1 = l.target.y;
-
-      //   var c = Math.abs(l.target.x - l.source.x);
-      //   var b = Math.abs(l.target.y - l.source.y);
-
-      //   var vY = y1 - y0;
-      //   var t = 1 - r / Math.sqrt(b * b + c * c);
-
-      //   var rY = y0 + t * vY;
-
-      //   return rY;
-      // })
 
       const node = svg
         .append("g")
@@ -183,19 +162,19 @@ export const GraphVisualizer = ({
         .data(data.nodes)
         .join("circle")
         .attr("fill", (d) => d.color)
-        .attr("stroke", () => "#805AD5")
+        .attr("stroke", () => borderColor)
         .attr("r", r)
         // @ts-ignore
         .call(drag(simulation));
 
       const labels = svg
         .append("g")
-        .attr("stroke", "#999")
         .attr("stroke-opacity", 0.6)
         .selectAll("label")
         .data(data.nodes)
         .join("text")
         .text((d) => d.name)
+        .attr("stroke", vertexLabelColor)
         .attr("x", (d) => d.x + r)
         .attr("y", (d) => d.y + r)
         .attr("class", "label");
@@ -206,7 +185,7 @@ export const GraphVisualizer = ({
         .data(data.links)
         .join("text")
         .text((d) => d.weight)
-        .attr("stroke", "#4d4d4d5e")
+        .attr("stroke", edgeLabelColor)
         .attr("font-size", 10)
         .attr("x", (d) => {
           // @ts-ignore
@@ -267,13 +246,26 @@ export const GraphVisualizer = ({
     }
   }, [data, ref.current, height, r, width]);
 
+  useEffect(() => {
+    if (window.width) {
+      setWidth((85 * window.width) / 100);
+    }
+    if (window.height) {
+      setHeight((75 * window.height) / 100);
+    }
+  }, [window]);
+
   return (
-    <div>
+    <div
+      style={{
+        boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+      }}
+    >
       <svg
         id="svg-here"
         style={{
-          height: 500,
-          width: 800,
+          height: height,
+          width: width,
           marginRight: "0px",
           marginLeft: "0px",
         }}
@@ -287,7 +279,7 @@ export const GraphVisualizer = ({
             refX="9"
             refY="3.5"
             orient="auto"
-            fill="#805AD5"
+            fill="purple"
           >
             <polygon points="0 1, 4 3.5, 0 6" />
           </marker>

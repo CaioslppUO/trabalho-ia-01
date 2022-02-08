@@ -1,8 +1,9 @@
 import { ReactNode, useEffect, useState } from "react";
 import { createContext } from "react";
 import { Graph } from "../model/types/graphTypes";
-import { GraphVisualizerElement } from "../components/MainVisuzalizer/GraphVisualizer";
+import { GraphVisualizerElement } from "../components/GraphVisuzlizer/GraphVisualizer";
 import { a_star } from "../model/algorithms/a_star";
+import { edgeColor, vertexColor } from "../styles/graph";
 
 type ComponentProps = {
   children: ReactNode;
@@ -46,6 +47,7 @@ export type MainObject = {
   straightPath: StraightPathProps[];
   setStraightPath: (e: StraightPathProps[]) => void;
   distStraighPath: number;
+  clearVisualGraph: () => void;
 };
 export const MainContext = createContext({} as MainObject);
 
@@ -63,6 +65,25 @@ export function MainContextProvider(props: ComponentProps) {
     nodes: [],
     links: [],
   });
+
+  function clearVisualGraph() {
+    const nodes = visualGraph.nodes.map((n) => {
+      n.color = vertexColor;
+
+      return n;
+    });
+
+    const links = visualGraph.links.map((n) => {
+      n.color = edgeColor;
+
+      return n;
+    });
+
+    setVisualGraph({
+      nodes,
+      links,
+    });
+  }
 
   useEffect(() => {
     if (
@@ -85,7 +106,7 @@ export function MainContextProvider(props: ComponentProps) {
         return {
           x: 0,
           y: 0,
-          color: "#b9bcd6",
+          color: vertexColor,
           name: n.vertex.name,
           id: n.vertex.name,
           vx: 0,
@@ -106,7 +127,7 @@ export function MainContextProvider(props: ComponentProps) {
             weight: a.weight,
             source: l.vertex.name,
             target: a.dstVertex,
-            color: "#b9bcd6",
+            color: edgeColor,
           });
         });
       });
@@ -152,6 +173,7 @@ export function MainContextProvider(props: ComponentProps) {
         straightPath,
         setStraightPath,
         distStraighPath,
+        clearVisualGraph,
       }}
     >
       {props.children}

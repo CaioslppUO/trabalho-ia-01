@@ -18,7 +18,13 @@ export const FileSelector = ({
   const toast = useToast();
 
   return (
-    <Flex alignItems="center" flexDirection="column">
+    <Flex
+      alignItems="center"
+      flexDirection="column"
+      w="100vw"
+      h="100vh"
+      justifyContent={"center"}
+    >
       <Heading marginBottom="30px">{title}</Heading>
       <Input
         display="none"

@@ -1,0 +1,9 @@
+export const edgeColor = "#b9bcd6";
+export const edgeVisitedColor = "#29096d";
+export const edgeStraightPathColor = "#6cfd8c";
+export const vertexColor = "#b9bcd6";
+export const vertexVisitedColor = "#805ad5";
+export const vertexStraightPathColor = "#6cfd8c";
+export const borderColor = "gray";
+export const vertexLabelColor = "gray";
+export const edgeLabelColor = "gray";
