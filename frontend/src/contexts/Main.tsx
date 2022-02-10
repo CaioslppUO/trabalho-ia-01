@@ -93,6 +93,7 @@ export function MainContextProvider(props: ComponentProps) {
       !!MainGraph.graph
     ) {
       const result = a_star(MainGraph).run(startVertex, endVertex);
+      console.log(result);
       setExplorePath(result.output);
       setStraightPath(result.straight_path as any);
       setDistStraightPath(result.distance);

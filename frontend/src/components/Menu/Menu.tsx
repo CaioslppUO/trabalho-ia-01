@@ -1,10 +1,10 @@
 import { Flex } from "@chakra-ui/react";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { MainContext } from "../../contexts/Main";
-import { ArrowBack } from "../ArrowBack/Arrowback";
+import { ArrowBack } from "../ArrowBack/ArrowBack";
 import { FileSelector } from "../FileSelector/FileSelector";
 import { process_entry_file } from "../../model/file";
-import { MainVisualizer } from "../MainVisuzalizer/MainVisualizer";
+import { MainVisualizer } from "../MainVisualizer/MainVisualizer";
 import { VertexSelector } from "../VertexSelector/VertexSelector";
 
 export const Menu = () => {
