@@ -100,7 +100,7 @@ export const a_star = (graph: Graph): AStar => {
    * @param dst Vértice de destino para a execução.
    * @returns Objeto do tipo Process_array que contém os vetores utilizados pelo algoritmo, já preenchidos com os valores iniciais.
    */
-  const init = (src: string, dst: string): Process_array => {
+  const init = (src: string, dst: string, optimize_distance: boolean = true): Process_array => {
     // Objeto que contém os vetores utilizados durante o algoritmo A*.
     const process_array: Process_array = { g_n: [], f_n: [], output: [] };
     // Preenchimento dos vetores de custo.
@@ -114,7 +114,12 @@ export const a_star = (graph: Graph): AStar => {
     // g(n) para o vértice inicial.
     process_array.g_n[src_g_n_pos].cost = 0;
     // Calculo de h(n) para o vértice inicial.
-    let src_h_n_cost = h(src, dst);
+    let src_h_n_cost: number;
+    if(!optimize_distance) {
+      src_h_n_cost = 0;
+    } else {
+      src_h_n_cost = h(src, dst);
+    }
     process_array.f_n[src_f_n_pos].cost = src_h_n_cost;
     return process_array;
   };
@@ -153,7 +158,7 @@ export const a_star = (graph: Graph): AStar => {
    * @param dst Vértice de destino.
    * @returns Vetor com os caminhos percorridos pelo algoritmo e medidas de desempenho.
    */
-  const run = (src: string, dst: string): AStarOutput => {
+  const run = (src: string, dst: string, optimize_distance: boolean = true): AStarOutput => {
     // let hrTime = process.hrtime()
     // let startTime = (hrTime[0] * 1000000 + hrTime[1] / 1000)/1000000;
     // Conta o número de nós expandidos e explorados.
@@ -164,7 +169,12 @@ export const a_star = (graph: Graph): AStar => {
     // Fila de prioridade de expansão dos nós.
     let priority_queue: Array<Cost> = [];
     // Inicializa a fila de prioridade com o nó inicial.
-    priority_queue.push({ vertex: src, cost: h(src, dst) });
+    if(!optimize_distance) {
+      priority_queue.push({ vertex: src, cost: 0 });
+    } else {
+      priority_queue.push({ vertex: src, cost: h(src, dst) });
+    }
+    
 
     while (priority_queue.length !== 0) {
       // Enquanto existirem nós que possam ser expandidos.
@@ -198,12 +208,22 @@ export const a_star = (graph: Graph): AStar => {
           // Percorre todas as arestas do vértice.
           let neighbor_vertex = vertex.edges.list[e].dstVertex;
           let neighbor_weigh = vertex.edges.list[e].weight;
-          let try_cost =
+          let try_cost: number;
+          if(!optimize_distance){
+            try_cost =
+            get_vertex_cost(process_array.g_n, next) + 1; // Custo de avançar por esse caminho.
+          } else {
+            try_cost =
             get_vertex_cost(process_array.g_n, next) + neighbor_weigh; // Custo de avançar por esse caminho.
+          }
           if (try_cost < get_vertex_cost(process_array.g_n, neighbor_vertex)) {
             // Explora o nó expandido.
             visited++;
-            total_distance += neighbor_weigh;
+            if(!optimize_distance) {
+              total_distance += 1;
+            } else {
+              total_distance += neighbor_weigh;
+            }
             // Marca que esse foi o caminho escolhido até então.
             process_array.output.push({
               srcVertex: next,
@@ -219,8 +239,12 @@ export const a_star = (graph: Graph): AStar => {
 
             // Atribuição do custo passado + estimativa (g(n) + h(n)) para o vizinho.
             let f_n_pos = find_position(process_array.f_n, neighbor_vertex);
-            process_array.f_n[f_n_pos].cost =
-              try_cost + h(neighbor_vertex, dst);
+            if(!optimize_distance) {
+              process_array.f_n[f_n_pos].cost = try_cost + 0;
+            } else {
+              process_array.f_n[f_n_pos].cost = try_cost + h(neighbor_vertex, dst);
+            }
+            
 
             //Caso o próximo nó não esteja na lista de nós que podem ser expandidos ele é adicionado.
             for (let p in priority_queue)
