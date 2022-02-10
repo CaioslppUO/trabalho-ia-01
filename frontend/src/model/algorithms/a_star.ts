@@ -65,13 +65,15 @@ export const a_star = (graph: Graph): AStar => {
   /**
    * Dado um vetor de custos retorna o vértice com menor custo.
    * @param arr Vetor de custos.
+   * @param dst Vetor de destino.
    * @returns Nome do vértice com menor custo.
    */
-  const get_vertex_with_lowers_cost = (arr: Array<Cost>): string => {
+  const get_vertex_with_lowers_cost = (arr: Array<Cost>, dst: string): string => {
     if (arr.length > 0) {
       let lower = 0;
       let i = 0;
       for (let c in arr) {
+        if(arr[c].vertex === dst) return arr[i].vertex;
         if (arr[c].cost < arr[lower].cost) lower = i;
         i++;
       }
@@ -178,7 +180,7 @@ export const a_star = (graph: Graph): AStar => {
 
     while (priority_queue.length !== 0) {
       // Enquanto existirem nós que possam ser expandidos.
-      let next = get_vertex_with_lowers_cost(priority_queue); // Seleciona um nó para expansão.
+      let next = get_vertex_with_lowers_cost(priority_queue, dst); // Seleciona um nó para expansão.
       if (next === dst) {
         let distance = 0;
         let straight = get_straight_path(process_array.output, dst);
