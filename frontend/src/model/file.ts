@@ -7,7 +7,7 @@ import {
 } from "./types/graphTypes";
 import { a_star } from "./algorithms/a_star";
 
-// const fs = require("fs");
+//const fs = require("fs");
 
 /**
  * Representa o conteúdo do arquivo de entrada.
@@ -171,13 +171,13 @@ export const process_entry_file = (content: string): Graph => {
   return graph;
 };
 
-// Exemplo de uso
-// fs.readFile('/home/caioslpp/git/trabalho-ia-01/examples/entry.txt', 'utf8' , (err: any, data: any) => {
+//Exemplo de uso
+// fs.readFile('/home/caioslpp/git/trabalho-ia-01/examples/entry_2.txt', 'utf8' , (err: any, data: any) => {
 //     if (err) {
 //       console.error(err)
 //       return
 //     }
 //     let graph = process_entry_file(data);
-//     let a = a_star(graph).run("a","f");
+//     let a = a_star(graph).run("a","e",true);
 //     console.log(a);
 // })

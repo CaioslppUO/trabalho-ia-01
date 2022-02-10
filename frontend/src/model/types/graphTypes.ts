@@ -46,8 +46,9 @@ export interface AStar {
    * Função que executa o algoritmo A*.
    * @param start_vertex Vértice de início do algoritmo.
    * @param end_vertex Vértice de destino do algoritmo.
+   * @param optimize_distance Diz se o algoritmo deve ou não otimizar pela distância
    */
-  run: (start_vertex: string, end_vertex: string) => AStarOutput;
+  run: (start_vertex: string, end_vertex: string, optimize_distance?: boolean) => AStarOutput;
 }
 
 /**
