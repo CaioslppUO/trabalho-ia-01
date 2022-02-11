@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Button, Flex, Heading, MenuItem, Text } from "@chakra-ui/react";
 import { useContext } from "react";
 import { MainContext } from "../../contexts/Main";
 import { ArrowBack } from "../ArrowBack/ArrowBack";
@@ -15,6 +15,7 @@ export const Menu = () => {
     setStartVertex,
     setEndVertex,
     clearVisualGraph,
+    setOptimization,
   } = useContext(MainContext);
 
   return (
@@ -61,7 +62,40 @@ export const Menu = () => {
           }}
         />
       )}
-      {tab === 3 && <MainVisualizer />}
+      {tab === 3 && (
+        <Flex
+          height={"100vh"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          flexDirection={"column"}
+        >
+          <Heading marginBottom={"50px"}>
+            Selecione o parâmetro de otimização
+          </Heading>
+
+          <Button
+            onClick={() => {
+              setOptimization(true);
+              setTab(tab + 1);
+            }}
+            marginBottom={"20px"}
+            colorScheme={"purple"}
+          >
+            Distância
+          </Button>
+          <Button
+            onClick={() => {
+              setOptimization(false);
+              setTab(tab + 1);
+            }}
+            colorScheme={"purple"}
+          >
+            Número de vértices
+          </Button>
+        </Flex>
+        // <h1>Hello</h1>
+      )}
+      {tab === 4 && <MainVisualizer />}
     </Flex>
   );
 };

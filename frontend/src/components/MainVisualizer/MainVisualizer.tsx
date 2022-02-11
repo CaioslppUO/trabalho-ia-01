@@ -22,6 +22,7 @@ export const MainVisualizer = () => {
     startVertex,
     straightPath,
     distStraighPath,
+    optimization,
   } = useContext(MainContext);
 
   const [distTotal, setDistTotal] = useState(0);
@@ -190,9 +191,17 @@ export const MainVisualizer = () => {
             <Divider orientation="vertical" />
             <Text marginX="20px">Dist. total percorrida: {distTotal}</Text>
             <Divider orientation="vertical" />
-            <Text marginX="20px">
-              Dist. menor caminho: {showDistStraightPath ? distStraighPath : 0}
-            </Text>
+            {optimization ? (
+              <Text marginX="20px">
+                Dist. menor caminho:{" "}
+                {showDistStraightPath ? distStraighPath : 0}
+              </Text>
+            ) : (
+              <Text marginX="20px">
+                Menor número de vértices:{" "}
+                {showDistStraightPath ? straightPath.length : 0}
+              </Text>
+            )}
           </Flex>
         </Flex>
         <Flex flexDirection={"column"} marginBottom={"5px"}>
