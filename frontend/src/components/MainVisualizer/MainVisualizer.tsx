@@ -33,9 +33,15 @@ export const MainVisualizer = () => {
   const [showDistStraightPath, setShowDistStraightPath] = useState(false);
 
   function showAllProcess() {
+    while (explorePath.length > 0) {
+      const item = explorePath.shift();
+      if (!!item) {
+        stepsBack.unshift(item);
+      }
+    }
     const nodes = visualGraph.nodes.map((n) => {
       if (
-        explorePath.find((e) => e.dstVertex === n.name) ||
+        stepsBack.find((e) => e.dstVertex === n.name) ||
         n.name === startVertex
       ) {
         n.color = "#805ad5";
@@ -45,7 +51,7 @@ export const MainVisualizer = () => {
 
     const links = visualGraph.links.map((n) => {
       if (
-        explorePath.find(
+        stepsBack.find(
           (e) =>
             // @ts-ignore
             e.srcVertex === n.source.name && e.dstVertex === n.target.name
@@ -56,9 +62,10 @@ export const MainVisualizer = () => {
 
       return n;
     });
-
-    setVisited(explorePath[explorePath.length - 1].visited);
-    setDistTotal(explorePath[explorePath.length - 1].total_distance);
+    if (stepsBack.length >= 1) {
+      setVisited(stepsBack[0].visited);
+      setDistTotal(stepsBack[0].total_distance);
+    }
 
     setVisualGraph({
       nodes,
@@ -112,40 +119,79 @@ export const MainVisualizer = () => {
   }
 
   function showStepBack() {
-    if (stepsBack.length > 0) {
+    if (showDistStraightPath) {
+      setShowDistStraightPath(false);
       const nodes = visualGraph.nodes.map((n) => {
-        if (stepsBack[0].dstVertex === n.name) {
-          n.color = vertexColor;
+        if (
+          stepsBack.find((e) => e.dstVertex === n.name) ||
+          n.name === startVertex
+        ) {
+          n.color = "#805ad5";
         }
         return n;
       });
-
       const links = visualGraph.links.map((n) => {
         if (
-          // @ts-ignore
-          stepsBack[0].srcVertex === n.source.name &&
-          // @ts-ignore
-          stepsBack[0].dstVertex === n.target.name
+          stepsBack.find(
+            (e) =>
+              // @ts-ignore
+              e.srcVertex === n.source.name && e.dstVertex === n.target.name
+          )
         ) {
-          n.color = edgeColor;
+          n.color = "#805ad5";
         }
-
         return n;
       });
-      setVisited(stepsBack[0].visited);
-      setDistTotal(stepsBack[0].total_distance);
-
-      const item = stepsBack.shift();
-
-      if (!!item) {
-        explorePath.unshift(item);
-        console.log(stepsBack);
+      if (stepsBack.length >= 1) {
+        setVisited(stepsBack[0].visited);
+        setDistTotal(stepsBack[0].total_distance);
       }
-
       setVisualGraph({
         nodes,
         links,
       });
+      while (explorePath.length > 0) {
+        const item = explorePath.shift();
+        if (!!item) {
+          stepsBack.unshift(item);
+        }
+      }
+    } else {
+      if (stepsBack.length > 0) {
+        const nodes = visualGraph.nodes.map((n) => {
+          if (stepsBack[0].dstVertex === n.name) {
+            n.color = vertexColor;
+          }
+          return n;
+        });
+
+        const links = visualGraph.links.map((n) => {
+          if (
+            // @ts-ignore
+            stepsBack[0].srcVertex === n.source.name &&
+            // @ts-ignore
+            stepsBack[0].dstVertex === n.target.name
+          ) {
+            n.color = edgeColor;
+          }
+
+          return n;
+        });
+        setVisited(stepsBack[0].visited);
+        setDistTotal(stepsBack[0].total_distance);
+
+        const item = stepsBack.shift();
+
+        if (!!item) {
+          explorePath.unshift(item);
+          console.log(stepsBack);
+        }
+
+        setVisualGraph({
+          nodes,
+          links,
+        });
+      }
     }
   }
 
