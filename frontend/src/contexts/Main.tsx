@@ -48,6 +48,8 @@ export type MainObject = {
   setStraightPath: (e: StraightPathProps[]) => void;
   distStraighPath: number;
   clearVisualGraph: () => void;
+  setOptimization: (o: boolean) => void;
+  optimization: boolean;
 };
 export const MainContext = createContext({} as MainObject);
 
@@ -58,6 +60,7 @@ export function MainContextProvider(props: ComponentProps) {
   const [tableData, setTableData] = useState<Array<TableLineProps>>([]);
   const [startVertex, setStartVertex] = useState("");
   const [endVertex, setEndVertex] = useState("");
+  const [optimization, setOptimization] = useState(true);
   const [distStraighPath, setDistStraightPath] = useState(0);
 
   const [straightPath, setStraightPath] = useState<StraightPathProps[]>([]);
@@ -92,12 +95,17 @@ export function MainContextProvider(props: ComponentProps) {
       !!MainGraph &&
       !!MainGraph.graph
     ) {
-      const result = a_star(MainGraph).run(startVertex, endVertex);
+      const result = a_star(MainGraph).run(
+        startVertex,
+        endVertex,
+        optimization
+      );
+      console.log(result);
       setExplorePath(result.output);
       setStraightPath(result.straight_path as any);
       setDistStraightPath(result.distance);
     }
-  }, [endVertex]);
+  }, [endVertex, optimization]);
 
   useEffect(() => {
     if (!!MainGraph && !!MainGraph.graph && MainGraph.graph.length > 0) {
@@ -174,6 +182,8 @@ export function MainContextProvider(props: ComponentProps) {
         setStraightPath,
         distStraighPath,
         clearVisualGraph,
+        setOptimization,
+        optimization,
       }}
     >
       {props.children}
