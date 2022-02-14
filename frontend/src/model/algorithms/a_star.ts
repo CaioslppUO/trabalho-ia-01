@@ -28,7 +28,7 @@ const find_position = (arr: Array<Cost>, vertex: string): number => {
     if (arr[c].vertex === vertex) return i;
     i++;
   }
-  throw Error("Cold not find vertex position in costs array");
+  throw Error("Cold not find vertex position in costs array.");
 };
 
 /**
@@ -73,7 +73,7 @@ export const a_star = (graph: Graph): AStar => {
       let lower = 0;
       let i = 0;
       for (let c in arr) {
-        if(arr[c].vertex === dst) return arr[i].vertex;
+        if(arr[c].vertex === dst && arr[c].cost === arr[lower].cost) return arr[i].vertex;
         if (arr[c].cost < arr[lower].cost) lower = i;
         i++;
       }
