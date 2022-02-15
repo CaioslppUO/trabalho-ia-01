@@ -92,10 +92,10 @@ export const GraphVisualizer = ({ r = 15, showData }: GraphVisualizerProps) => {
         .forceLink(data.links)
         // @ts-ignore
         .id((d) => d.name)
-        .distance(100)
-        .strength(1)
+        .distance(150)
+        .strength(0.2)
     )
-    .force("charge", d3.forceManyBody().strength(-1900))
+    .force("charge", d3.forceManyBody().strength(-1000))
     .force("x", d3.forceX(width / 2))
     .force("y", d3.forceY(height / 2))
     .force("collide", d3.forceCollide(r));
@@ -201,45 +201,154 @@ export const GraphVisualizer = ({ r = 15, showData }: GraphVisualizerProps) => {
 
       simulation.on("tick", () => {
         link
+          .attr("x1", (d) => {
+            // @ts-ignore
+            if (d.source.x < 10 + r) {
+              return r + 10;
+            }
+            // @ts-ignore
+            if (d.source.x > width - r - 10) {
+              return width - r - 10;
+            }
+            // @ts-ignore
+            return d.source.x;
+          })
           // @ts-ignore
-          .attr("x1", (d) => d.source.x)
+          .attr("y1", (d) => {
+            // @ts-ignore
+            if (d.source.y < 10 + r) {
+              return r + 10;
+            }
+            // @ts-ignore
+            if (d.source.y > height - r - 10) {
+              return height - r - 10;
+            }
+            // @ts-ignore
+            return d.source.y;
+          })
           // @ts-ignore
-          .attr("y1", (d) => d.source.y)
-          // @ts-ignore
-          .attr("x2", (l: any) => l.target.x)
-          //@ts-ignore
-          .attr("y2", (l: any) => l.target.y);
+          .attr("x2", (l: any) => {
+            // @ts-ignore
+            if (l.target.x < 10 + r) {
+              return r + 10;
+            }
+            // @ts-ignore
+            if (l.target.x > width - r - 10) {
+              return width - r - 10;
+            }
+            return l.target.x;
+          })
+          .attr("y2", (l: any) => {
+            // @ts-ignore
+            if (l.target.y < 10 + r) {
+              return r + 10;
+            }
+            // @ts-ignore
+            if (l.target.y > height - r - 10) {
+              return height - r - 10;
+            }
+            // @ts-ignore
+            return l.target.y;
+          });
         node
           .attr("cx", (d) => {
-            if (d.x < 0) {
-              return 0 + r;
-            } else if (d.x > width + r) {
-              return width - r;
+            if (d.x < 10 + r) {
+              return 0 + r + 10;
+            } else if (d.x > width - r - 10) {
+              return width - r - 10;
             } else {
               return d.x;
             }
           })
           .attr("cy", (d) => {
-            if (d.y < 0) {
-              return 0 + r;
-            } else if (d.y > height) {
-              return height - r;
+            if (d.y < r + 10) {
+              return 0 + r + 10;
+            } else if (d.y > height - r - 10) {
+              return height - r - 10;
             } else {
               return d.y;
             }
           });
 
-        labels.attr("x", (d) => d.x + r).attr("y", (d) => d.y + r);
+        labels
+          .attr("x", (d) => {
+            if (d.x < 0) {
+              return 0 + r + 10;
+            }
+            if (d.x > width) {
+              return width - r - 10;
+            }
+            return d.x + r;
+          })
+          .attr("y", (d) => {
+            if (d.y < 0) {
+              return r + 10;
+            }
+            if (d.y > height) {
+              return height - r - 10;
+            }
+            return d.y + r;
+          });
 
         labels2
           .attr("x", (d) => {
             // @ts-ignore
-            const x = Math.abs(d.target.x + d.source.x) / 2;
+            let x1 = d.source.x;
+            // @ts-ignore
+            let x2 = d.target.x;
+            // @ts-ignore
+            if (x1 > width - r - 10) {
+              x1 = width - r - 10;
+            } else if (
+              // @ts-ignore
+              x1 <
+              r + 10
+            ) {
+              x1 = r + 10;
+            }
+
+            // @ts-ignore
+            if (x2 > width - r - 10) {
+              x2 = width - r - 10;
+            } else if (
+              // @ts-ignore
+              x2 <
+              r + 10
+            ) {
+              x2 = r + 10;
+            }
+            // @ts-ignore
+            const x = Math.abs(x1 + x2) / 2;
             return x;
           })
           .attr("y", (d) => {
             // @ts-ignore
-            const y = Math.abs(d.target.y + d.source.y) / 2;
+            let y1 = d.source.y;
+            // @ts-ignore
+            let y2 = d.target.y;
+            // @ts-ignore
+            if (y1 > height - r - 10) {
+              y1 = height - r - 10;
+            } else if (
+              // @ts-ignore
+              y1 <
+              r + 10
+            ) {
+              y1 = r + 10;
+            }
+
+            // @ts-ignore
+            if (y2 > height - r - 10) {
+              y2 = height - r - 10;
+            } else if (
+              // @ts-ignore
+              y2 <
+              r + 10
+            ) {
+              y2 = r + 10;
+            }
+            // @ts-ignore
+            const y = Math.abs(y1 + y2) / 2;
             return y;
           });
       });

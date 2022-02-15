@@ -106,6 +106,7 @@ export function MainContextProvider(props: ComponentProps) {
       setExplorePath(result.output);
       setStraightPath(result.straight_path as any);
       setDistStraightPath(result.distance);
+      clearVisualGraph();
     }
   }, [endVertex, optimization, algorithm]);
 
