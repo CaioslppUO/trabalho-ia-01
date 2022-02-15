@@ -95,7 +95,7 @@ export const GraphVisualizer = ({ r = 15, showData }: GraphVisualizerProps) => {
         .distance(150)
         .strength(0.2)
     )
-    .force("charge", d3.forceManyBody().strength(-1000))
+    .force("charge", d3.forceManyBody().strength(-1300))
     .force("x", d3.forceX(width / 2))
     .force("y", d3.forceY(height / 2))
     .force("collide", d3.forceCollide(r));

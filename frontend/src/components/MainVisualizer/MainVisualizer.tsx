@@ -44,7 +44,7 @@ export const MainVisualizer = () => {
         stepsBack.find((e) => e.dstVertex === n.name) ||
         n.name === startVertex
       ) {
-        n.color = "#805ad5";
+        n.color = vertexVisitedColor;
       }
       return n;
     });
@@ -54,10 +54,12 @@ export const MainVisualizer = () => {
         stepsBack.find(
           (e) =>
             // @ts-ignore
-            e.srcVertex === n.source.name && e.dstVertex === n.target.name
+            (e.srcVertex === n.source.name && e.dstVertex === n.target.name) ||
+            // @ts-ignore
+            (e.dstVertex === n.source.name && e.srcVertex === n.target.name)
         )
       ) {
-        n.color = "#805ad5";
+        n.color = edgeVisitedColor;
       }
 
       return n;
@@ -91,9 +93,13 @@ export const MainVisualizer = () => {
         // console.log(n);
         if (
           // @ts-ignore
-          explorePath[0].srcVertex === n.source.name &&
+          (explorePath[0].srcVertex === n.source.name &&
+            // @ts-ignore
+            explorePath[0].dstVertex === n.target.name) ||
           // @ts-ignore
-          explorePath[0].dstVertex === n.target.name
+          (explorePath[0].dstVertex === n.source.name &&
+            // @ts-ignore
+            explorePath[0].srcVertex === n.target.name)
         ) {
           n.color = edgeVisitedColor;
         }
@@ -126,7 +132,7 @@ export const MainVisualizer = () => {
           stepsBack.find((e) => e.dstVertex === n.name) ||
           n.name === startVertex
         ) {
-          n.color = "#805ad5";
+          n.color = vertexVisitedColor;
         }
         return n;
       });
@@ -135,10 +141,14 @@ export const MainVisualizer = () => {
           stepsBack.find(
             (e) =>
               // @ts-ignore
-              e.srcVertex === n.source.name && e.dstVertex === n.target.name
+              (e.srcVertex === n.source.name &&
+                // @ts-ignore
+                e.dstVertex === n.target.name) ||
+              // @ts-ignore
+              (e.dstVertex === n.source.name && e.srcVertex === n.target.name)
           )
         ) {
-          n.color = "#805ad5";
+          n.color = edgeVisitedColor;
         }
         return n;
       });
@@ -168,9 +178,13 @@ export const MainVisualizer = () => {
         const links = visualGraph.links.map((n) => {
           if (
             // @ts-ignore
-            stepsBack[0].srcVertex === n.source.name &&
+            (stepsBack[0].srcVertex === n.source.name &&
+              // @ts-ignore
+              stepsBack[0].dstVertex === n.target.name) ||
             // @ts-ignore
-            stepsBack[0].dstVertex === n.target.name
+            (stepsBack[0].dstVertex === n.source.name &&
+              // @ts-ignore
+              stepsBack[0].srcVertex === n.target.name)
           ) {
             n.color = edgeColor;
           }
@@ -211,7 +225,9 @@ export const MainVisualizer = () => {
         straightPath.find(
           (e) =>
             // @ts-ignore
-            e.srcVertex === n.source.name && e.dstVertex === n.target.name
+            (e.srcVertex === n.source.name && e.dstVertex === n.target.name) ||
+            // @ts-ignore
+            (e.srcVertex === n.target.name && e.dstVertex === n.source.name)
         )
       ) {
         n.color = edgeStraightPathColor;
