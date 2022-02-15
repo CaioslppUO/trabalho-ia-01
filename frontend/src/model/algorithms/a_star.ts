@@ -158,8 +158,6 @@ export const a_star = (graph: Graph): AStar => {
     // Reconstruindo todo o caminho a partir do nó que levou até dst.
     for (let i = output.length - 2; i >= 0; i--) {
       if (output[i].dstVertex === dst) {
-        console.log(res);
-        console.log(output);
         res.push({
           dstVertex: dst,
           srcVertex: output[i].srcVertex,
