@@ -145,12 +145,21 @@ export const a_star = (graph: Graph): AStar => {
     dst: string
   ): Array<StraightPath> => {
     let res: Array<StraightPath> = [];
-    let last = output[output.length - 1];
+    let last: Output = output[output.length - 1];
+    // Procurando qual nó levou até o dst.
+    for(let i = output.length - 1; i >= 0; i--) {
+      if(output[i].dstVertex === dst) {
+        last = output[i];
+      }
+    }
     let distance = last.local_distance;
     res.push({ dstVertex: dst, srcVertex: last.srcVertex, distance: distance });
     dst = last.srcVertex;
+    // Reconstruindo todo o caminho a partir do nó que levou até dst.
     for (let i = output.length - 2; i >= 0; i--) {
       if (output[i].dstVertex === dst) {
+        console.log(res);
+        console.log(output);
         res.push({
           dstVertex: dst,
           srcVertex: output[i].srcVertex,
