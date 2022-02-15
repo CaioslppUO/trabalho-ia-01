@@ -329,7 +329,7 @@ export const MainVisualizer = () => {
 
               <Flex alignItems={"center"}>
                 <Text fontSize={"10px"} marginX="5px">
-                  Menor caminho
+                  Caminho do algoritmo
                 </Text>
                 <Box
                   w="30px"

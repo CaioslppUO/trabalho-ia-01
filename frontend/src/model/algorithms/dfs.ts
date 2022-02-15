@@ -64,6 +64,7 @@ export const dfs = (graph: Graph) => {
    */
   const run = (src: string, dst: string): AlgorithmOutput => {
     const origin = graph.getVertex(src);
+    const visited: string[] = [];
     if (!!origin) {
       borders.push({
         item: origin,
@@ -75,6 +76,10 @@ export const dfs = (graph: Graph) => {
 
       while (borders.length > 0) {
         const v = borders.pop();
+
+        if (!!v) {
+          visited.push(v?.item.vertex.name);
+        }
         // console.log(v?.item.vertex.name);
 
         if (!!v && v.item.vertex.name !== src) {
@@ -98,7 +103,7 @@ export const dfs = (graph: Graph) => {
         v?.item.edges.list.forEach((i) => {
           const a = graph.getVertex(i.dstVertex);
 
-          if (!!a) {
+          if (!!a && !visited.find((x) => x === a.vertex.name)) {
             borders.push({
               item: a,
               distance: v.distance + i.weight,

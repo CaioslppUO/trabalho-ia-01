@@ -18,6 +18,7 @@ export const AlgorithmSelector = () => {
 
       <Button
         onClick={() => {
+          setAlgorithm("a_star");
           setOptimization(true);
           setTab(tab + 1);
         }}
@@ -28,13 +29,14 @@ export const AlgorithmSelector = () => {
       </Button>
       <Button
         onClick={() => {
+          setAlgorithm("a_star");
           setOptimization(false);
           setTab(tab + 1);
         }}
         marginBottom={"20px"}
         colorScheme={"purple"}
       >
-        A* otimizado com número de vértices
+        A* otimizado com número de vértices (Melhor abordagem)
       </Button>
 
       <Button
