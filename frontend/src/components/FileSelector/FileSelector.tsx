@@ -29,7 +29,7 @@ export const FileSelector = ({
       <Input
         display="none"
         onChange={(e) => {
-          console.log("File selected");
+          // console.log("File selected");
           if (e.target.files !== null) {
             const reader = new FileReader();
             reader.readAsText(e.target.files[0], "UTF-8");

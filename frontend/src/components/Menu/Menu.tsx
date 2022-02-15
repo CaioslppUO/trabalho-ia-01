@@ -6,6 +6,7 @@ import { FileSelector } from "../FileSelector/FileSelector";
 import { process_entry_file } from "../../model/file";
 import { MainVisualizer } from "../MainVisualizer/MainVisualizer";
 import { VertexSelector } from "../VertexSelector/VertexSelector";
+import { AlgorithmSelector } from "../AlgorithmSelector/AlgorithmSelector";
 
 export const Menu = () => {
   const {
@@ -62,39 +63,7 @@ export const Menu = () => {
           }}
         />
       )}
-      {tab === 3 && (
-        <Flex
-          height={"100vh"}
-          alignItems={"center"}
-          justifyContent={"center"}
-          flexDirection={"column"}
-        >
-          <Heading marginBottom={"50px"}>
-            Selecione o parâmetro de otimização
-          </Heading>
-
-          <Button
-            onClick={() => {
-              setOptimization(true);
-              setTab(tab + 1);
-            }}
-            marginBottom={"20px"}
-            colorScheme={"purple"}
-          >
-            Distância
-          </Button>
-          <Button
-            onClick={() => {
-              setOptimization(false);
-              setTab(tab + 1);
-            }}
-            colorScheme={"purple"}
-          >
-            Número de vértices
-          </Button>
-        </Flex>
-        // <h1>Hello</h1>
-      )}
+      {tab === 3 && <AlgorithmSelector />}
       {tab === 4 && <MainVisualizer />}
     </Flex>
   );

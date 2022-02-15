@@ -88,7 +88,7 @@ export const MainVisualizer = () => {
       });
 
       const links = visualGraph.links.map((n) => {
-        console.log(n);
+        // console.log(n);
         if (
           // @ts-ignore
           explorePath[0].srcVertex === n.source.name &&
@@ -184,7 +184,7 @@ export const MainVisualizer = () => {
 
         if (!!item) {
           explorePath.unshift(item);
-          console.log(stepsBack);
+          // console.log(stepsBack);
         }
 
         setVisualGraph({
@@ -276,7 +276,7 @@ export const MainVisualizer = () => {
               <Button
                 size={"sm"}
                 onClick={showStepBack}
-                key="1"
+                key="2"
                 colorScheme={"green"}
               >
                 Mostrar passo anterior
@@ -285,7 +285,9 @@ export const MainVisualizer = () => {
 
             <Flex marginBottom={"5px"} alignItems={"center"} paddingX={"10px"}>
               <Flex alignItems={"center"} marginRight={"10px"}>
-                <Text marginX="5px">Não visitado</Text>
+                <Text fontSize={"10px"} marginX="5px">
+                  Não visitado
+                </Text>
                 <Box
                   w="30px"
                   h="30px"
@@ -296,7 +298,9 @@ export const MainVisualizer = () => {
               </Flex>
               <Divider orientation="vertical" />
               <Flex alignItems={"center"} marginRight={"10px"}>
-                <Text marginX="5px">Visitado</Text>
+                <Text fontSize={"10px"} marginX="5px">
+                  Visitado
+                </Text>
                 <Box
                   w="30px"
                   h="30px"
@@ -308,7 +312,9 @@ export const MainVisualizer = () => {
               <Divider orientation="vertical" />
 
               <Flex alignItems={"center"}>
-                <Text marginX="5px">Menor caminho</Text>
+                <Text fontSize={"10px"} marginX="5px">
+                  Menor caminho
+                </Text>
                 <Box
                   w="30px"
                   h="30px"

@@ -113,7 +113,7 @@ export const GraphVisualizer = ({ r = 15, showData }: GraphVisualizerProps) => {
     }
 
     if (!!svg) {
-      console.log(svg.attr("width"));
+      // console.log(svg.attr("width"));
       svg.selectAll("*").remove();
 
       const drag = (simulation: any) => {

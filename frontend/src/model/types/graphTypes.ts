@@ -48,7 +48,11 @@ export interface AStar {
    * @param end_vertex Vértice de destino do algoritmo.
    * @param optimize_distance Diz se o algoritmo deve ou não otimizar pela distância
    */
-  run: (start_vertex: string, end_vertex: string, optimize_distance?: boolean) => AStarOutput;
+  run: (
+    start_vertex: string,
+    end_vertex: string,
+    optimize_distance?: boolean
+  ) => AlgorithmOutput;
 }
 
 /**
@@ -160,7 +164,7 @@ export const AdjacencyListItem = (
 /**
  * Representa a resposta dada pelo algoritmo, junto com todas as métricas de desempenho.
  */
-export interface AStarOutput {
+export interface AlgorithmOutput {
   straight_path: Array<StraightPath> | null;
   output: Array<Output>;
   distance: number;

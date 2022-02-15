@@ -4,6 +4,7 @@ import { Graph } from "../model/types/graphTypes";
 import { GraphVisualizerElement } from "../components/GraphVisuzlizer/GraphVisualizer";
 import { a_star } from "../model/algorithms/a_star";
 import { edgeColor, vertexColor } from "../styles/graph";
+import { dfs } from "../model/algorithms/dfs";
 
 type ComponentProps = {
   children: ReactNode;
@@ -50,6 +51,8 @@ export type MainObject = {
   clearVisualGraph: () => void;
   setOptimization: (o: boolean) => void;
   optimization: boolean;
+  algorithm: "dfs" | "a_star";
+  setAlgorithm: (a: "dfs" | "a_star") => void;
 };
 export const MainContext = createContext({} as MainObject);
 
@@ -62,6 +65,7 @@ export function MainContextProvider(props: ComponentProps) {
   const [endVertex, setEndVertex] = useState("");
   const [optimization, setOptimization] = useState(true);
   const [distStraighPath, setDistStraightPath] = useState(0);
+  const [algorithm, setAlgorithm] = useState<"dfs" | "a_star">("a_star");
 
   const [straightPath, setStraightPath] = useState<StraightPathProps[]>([]);
   const [visualGraph, setVisualGraph] = useState<GraphVisualizerElement>({
@@ -95,17 +99,15 @@ export function MainContextProvider(props: ComponentProps) {
       !!MainGraph &&
       !!MainGraph.graph
     ) {
-      const result = a_star(MainGraph).run(
-        startVertex,
-        endVertex,
-        optimization
-      );
-      console.log(result);
+      const result =
+        algorithm === "a_star"
+          ? a_star(MainGraph).run(startVertex, endVertex, optimization)
+          : dfs(MainGraph).run(startVertex, endVertex);
       setExplorePath(result.output);
       setStraightPath(result.straight_path as any);
       setDistStraightPath(result.distance);
     }
-  }, [endVertex, optimization]);
+  }, [endVertex, optimization, algorithm]);
 
   useEffect(() => {
     if (!!MainGraph && !!MainGraph.graph && MainGraph.graph.length > 0) {
@@ -184,6 +186,8 @@ export function MainContextProvider(props: ComponentProps) {
         clearVisualGraph,
         setOptimization,
         optimization,
+        algorithm,
+        setAlgorithm,
       }}
     >
       {props.children}
