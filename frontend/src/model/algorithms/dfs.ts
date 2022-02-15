@@ -88,7 +88,7 @@ export const dfs = (graph: Graph) => {
             dstVertex: v.item.vertex.name,
             local_distance: v.localDistance,
             total_distance: v.distance,
-            visited: v.visited,
+            visited: visited.length,
           });
         }
 

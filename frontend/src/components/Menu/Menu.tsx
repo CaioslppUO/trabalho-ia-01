@@ -16,7 +16,6 @@ export const Menu = () => {
     setStartVertex,
     setEndVertex,
     clearVisualGraph,
-    setOptimization,
   } = useContext(MainContext);
 
   return (

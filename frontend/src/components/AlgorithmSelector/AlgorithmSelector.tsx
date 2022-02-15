@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { MainContext } from "../../contexts/Main";
 
 export const AlgorithmSelector = () => {
-  const { setOptimization, setTab, tab, setAlgorithm } =
+  const { setOptimization, setTab, tab, setAlgorithm, execute } =
     useContext(MainContext);
   return (
     <Flex

@@ -53,6 +53,7 @@ export type MainObject = {
   optimization: boolean;
   algorithm: "dfs" | "a_star";
   setAlgorithm: (a: "dfs" | "a_star") => void;
+  execute: () => void;
 };
 export const MainContext = createContext({} as MainObject);
 
@@ -92,7 +93,7 @@ export function MainContextProvider(props: ComponentProps) {
     });
   }
 
-  useEffect(() => {
+  function execute() {
     if (
       startVertex.length > 0 &&
       endVertex.length > 0 &&
@@ -103,12 +104,19 @@ export function MainContextProvider(props: ComponentProps) {
         algorithm === "a_star"
           ? a_star(MainGraph).run(startVertex, endVertex, optimization)
           : dfs(MainGraph).run(startVertex, endVertex);
+      console.log(result);
       setExplorePath(result.output);
       setStraightPath(result.straight_path as any);
       setDistStraightPath(result.distance);
       clearVisualGraph();
     }
-  }, [endVertex, optimization, algorithm]);
+  }
+
+  useEffect(() => {
+    if (tab === 4) {
+      execute();
+    }
+  }, [tab]);
 
   useEffect(() => {
     if (!!MainGraph && !!MainGraph.graph && MainGraph.graph.length > 0) {
@@ -189,6 +197,7 @@ export function MainContextProvider(props: ComponentProps) {
         optimization,
         algorithm,
         setAlgorithm,
+        execute,
       }}
     >
       {props.children}
