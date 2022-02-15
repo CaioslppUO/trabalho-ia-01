@@ -13,6 +13,10 @@ import {
   vertexVisitedColor,
 } from "../../styles/graph";
 
+/**
+ * Componente responsável por mostrar o grafo na tela e os comandos para visualizar o algoritmo em funcionamento
+ * @returns
+ */
 export const MainVisualizer = () => {
   const {
     tableData,
@@ -27,11 +31,12 @@ export const MainVisualizer = () => {
 
   const [distTotal, setDistTotal] = useState(0);
   const [visited, setVisited] = useState(0);
-
   const [stepsBack, setStepsBack] = useState<ExploreProps[]>([]);
-
   const [showDistStraightPath, setShowDistStraightPath] = useState(false);
 
+  /**
+   * Função responsável por mostrar o resultado final do algoritmo
+   */
   function showAllProcess() {
     while (explorePath.length > 0) {
       const item = explorePath.shift();
@@ -77,6 +82,9 @@ export const MainVisualizer = () => {
     showStraightpath();
   }
 
+  /**
+   * Função responsável por mostrar o próximo passo do algoritmo
+   */
   function showNextStep() {
     if (explorePath.length > 0) {
       const nodes = visualGraph.nodes.map((n) => {
@@ -124,6 +132,9 @@ export const MainVisualizer = () => {
     }
   }
 
+  /**
+   * Função responsável por mostrar passo anterior do algoritmo
+   */
   function showStepBack() {
     if (showDistStraightPath) {
       setShowDistStraightPath(false);
@@ -209,6 +220,9 @@ export const MainVisualizer = () => {
     }
   }
 
+  /**
+   * Função responsável por mostrar o menor caminho
+   */
   function showStraightpath() {
     const nodes = visualGraph.nodes.map((n) => {
       if (

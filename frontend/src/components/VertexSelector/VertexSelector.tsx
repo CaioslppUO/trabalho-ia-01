@@ -1,9 +1,14 @@
-import { Flex, Heading, Box } from "@chakra-ui/react";
-import { useContext, useEffect, useState } from "react";
+import { Flex, Heading } from "@chakra-ui/react";
+import { useContext } from "react";
 import { MainContext } from "../../contexts/Main";
 import { GraphVisualizer } from "../GraphVisuzlizer/GraphVisualizer";
 import { MenuItem } from "../Menu/MenuItem/MenuItem";
 
+/**
+ * Componente utilizado para escolher um vértice do grafo
+ * @param param0 Titulo a ser mostrado em tela, função a ser executada quando selecionado o vértice
+ * @returns
+ */
 export const VertexSelector = ({
   title = "",
   onSelect = (a: string) => {},

@@ -2,6 +2,10 @@ import { Flex, Heading, Button } from "@chakra-ui/react";
 import { useContext } from "react";
 import { MainContext } from "../../contexts/Main";
 
+/**
+ * Componente utilizado para selecionar qual algoritmo utilizar
+ * @returns react component
+ */
 export const AlgorithmSelector = () => {
   const { setOptimization, setTab, tab, setAlgorithm, execute } =
     useContext(MainContext);

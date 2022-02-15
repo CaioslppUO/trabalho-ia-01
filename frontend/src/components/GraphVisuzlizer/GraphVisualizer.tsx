@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-
 import * as d3 from "d3";
 import {
   borderColor,
@@ -7,6 +6,10 @@ import {
   vertexLabelColor,
 } from "../../styles/graph";
 
+/**
+ * Função utilizada para obter largura e altura da tela do dispositivo
+ * @returns largura e altura da tela
+ */
 function getWindowDimensions() {
   const { innerWidth: width, innerHeight: height } = window;
   return {
@@ -15,6 +18,9 @@ function getWindowDimensions() {
   };
 }
 
+/**
+ * Tipo de dado utilizado armazenar informações do visualizador
+ */
 export type GraphVisualizerProps = {
   width?: number;
   height?: number;
@@ -22,6 +28,9 @@ export type GraphVisualizerProps = {
   showData?: GraphVisualizerElement;
 };
 
+/**
+ * TIpo de dado utilizado para armazenar informações do grafo a ser visualizado
+ */
 export type GraphVisualizerElement = {
   nodes: Array<{
     x: number;

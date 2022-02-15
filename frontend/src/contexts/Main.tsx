@@ -10,12 +10,18 @@ type ComponentProps = {
   children: ReactNode;
 };
 
+/**
+ * Dado que representa a tabela de distâncias heurísticas
+ */
 type TableLineProps = {
   column1: string;
   column2: string;
   column3: number;
 };
 
+/**
+ * Dado que representa um item do objeto de caminho percorrido
+ */
 export type ExploreProps = {
   dstVertex: string;
   srcVertex: string;
@@ -24,12 +30,18 @@ export type ExploreProps = {
   visited: number;
 };
 
+/**
+ * Dados que representa um item do objeto de menor caminho
+ */
 export type StraightPathProps = {
   dstVertex: string;
   srcVertex: string;
   distance: number;
 };
 
+/**
+ * Tipo de dado que é compartilhado pelo componente main
+ */
 export type MainObject = {
   MainGraph: Graph;
   setMainGraph: (v: Graph) => void;
@@ -55,8 +67,15 @@ export type MainObject = {
   setAlgorithm: (a: "dfs" | "a_star") => void;
   execute: () => void;
 };
+
+/**
+ * Provedor do contexto main
+ */
 export const MainContext = createContext({} as MainObject);
 
+/**
+ * Componente utilizado de forma principal para gerenciamento de estados
+ */
 export function MainContextProvider(props: ComponentProps) {
   const [tab, setTab] = useState(0);
   const [MainGraph, setMainGraph] = useState<Graph>({} as Graph);

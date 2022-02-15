@@ -8,6 +8,10 @@ import { MainVisualizer } from "../MainVisualizer/MainVisualizer";
 import { VertexSelector } from "../VertexSelector/VertexSelector";
 import { AlgorithmSelector } from "../AlgorithmSelector/AlgorithmSelector";
 
+/**
+ * Componente responsável por controlar o fluxo de telas da aplicação
+ * @returns react element
+ */
 export const Menu = () => {
   const {
     setTab,
