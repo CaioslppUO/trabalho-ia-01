@@ -180,6 +180,7 @@ export const a_star = (graph: Graph): AStar => {
     dst: string,
     optimize_distance: boolean = true
   ): AlgorithmOutput => {
+    let explored: Array<string> = [];
     // let hrTime = process.hrtime()
     // let startTime = (hrTime[0] * 1000000 + hrTime[1] / 1000)/1000000;
     // Conta o número de nós expandidos e explorados.
@@ -236,6 +237,9 @@ export const a_star = (graph: Graph): AStar => {
               get_vertex_cost(process_array.g_n, next) + neighbor_weigh; // Custo de avançar por esse caminho.
           }
           if (try_cost < get_vertex_cost(process_array.g_n, neighbor_vertex)) {
+            if(!explored.includes(next) && next !== src) {
+              explored.push(next);
+            }
             // Explora o nó expandido.
             visited++;
             if (!optimize_distance) {
@@ -248,6 +252,7 @@ export const a_star = (graph: Graph): AStar => {
               srcVertex: next,
               dstVertex: neighbor_vertex,
               visited: visited,
+              explored: explored.length,
               total_distance: total_distance,
               local_distance: neighbor_weigh,
             });

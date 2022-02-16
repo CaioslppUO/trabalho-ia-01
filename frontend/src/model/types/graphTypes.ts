@@ -195,6 +195,7 @@ export interface Output {
   srcVertex: string;
   dstVertex: string;
   visited: number;
+  explored: number;
   total_distance: number;
   local_distance: number;
 }
