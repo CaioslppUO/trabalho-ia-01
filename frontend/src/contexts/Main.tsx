@@ -10,12 +10,18 @@ type ComponentProps = {
   children: ReactNode;
 };
 
+/**
+ * Dado que representa a tabela de distâncias heurísticas
+ */
 type TableLineProps = {
   column1: string;
   column2: string;
   column3: number;
 };
 
+/**
+ * Dado que representa um item do objeto de caminho percorrido
+ */
 export type ExploreProps = {
   dstVertex: string;
   srcVertex: string;
@@ -24,12 +30,18 @@ export type ExploreProps = {
   visited: number;
 };
 
+/**
+ * Dados que representa um item do objeto de menor caminho
+ */
 export type StraightPathProps = {
   dstVertex: string;
   srcVertex: string;
   distance: number;
 };
 
+/**
+ * Tipo de dado que é compartilhado pelo componente main
+ */
 export type MainObject = {
   MainGraph: Graph;
   setMainGraph: (v: Graph) => void;
@@ -54,9 +66,17 @@ export type MainObject = {
   algorithm: "dfs" | "a_star";
   setAlgorithm: (a: "dfs" | "a_star") => void;
   execute: () => void;
+  distTotal: number;
 };
+
+/**
+ * Provedor do contexto main
+ */
 export const MainContext = createContext({} as MainObject);
 
+/**
+ * Componente utilizado de forma principal para gerenciamento de estados
+ */
 export function MainContextProvider(props: ComponentProps) {
   const [tab, setTab] = useState(0);
   const [MainGraph, setMainGraph] = useState<Graph>({} as Graph);
@@ -66,6 +86,7 @@ export function MainContextProvider(props: ComponentProps) {
   const [endVertex, setEndVertex] = useState("");
   const [optimization, setOptimization] = useState(true);
   const [distStraighPath, setDistStraightPath] = useState(0);
+  const [distTotal, setDistTotal] = useState(0);
   const [algorithm, setAlgorithm] = useState<"dfs" | "a_star">("a_star");
 
   const [straightPath, setStraightPath] = useState<StraightPathProps[]>([]);
@@ -104,7 +125,13 @@ export function MainContextProvider(props: ComponentProps) {
         algorithm === "a_star"
           ? a_star(MainGraph).run(startVertex, endVertex, optimization)
           : dfs(MainGraph).run(startVertex, endVertex);
-      console.log(result);
+
+      // console.log(result);
+      let d = 0;
+      result.output.forEach((j) => {
+        d = d + j.local_distance;
+      });
+      setDistTotal(d);
       setExplorePath(result.output);
       setStraightPath(result.straight_path as any);
       setDistStraightPath(result.distance);
@@ -198,6 +225,7 @@ export function MainContextProvider(props: ComponentProps) {
         algorithm,
         setAlgorithm,
         execute,
+        distTotal,
       }}
     >
       {props.children}
