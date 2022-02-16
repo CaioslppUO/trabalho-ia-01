@@ -28,6 +28,7 @@ export type ExploreProps = {
   local_distance: number;
   total_distance: number;
   visited: number;
+  explored: number;
 };
 
 /**

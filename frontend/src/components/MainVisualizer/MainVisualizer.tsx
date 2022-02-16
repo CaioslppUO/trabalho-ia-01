@@ -31,6 +31,7 @@ export const MainVisualizer = () => {
   } = useContext(MainContext);
 
   const [visited, setVisited] = useState(0);
+  const [explored, setExplored] = useState(0);
   const [totalDistance, setTotalDistance] = useState(0);
   const [stepsBack, setStepsBack] = useState<ExploreProps[]>([]);
   const [showDistStraightPath, setShowDistStraightPath] = useState(false);
@@ -72,6 +73,7 @@ export const MainVisualizer = () => {
     });
     if (stepsBack.length >= 1) {
       setVisited(stepsBack[0].visited);
+      setExplored(stepsBack[0].explored);
       setTotalDistance(distTotal);
     }
 
@@ -116,6 +118,7 @@ export const MainVisualizer = () => {
         return n;
       });
       setVisited(explorePath[0].visited);
+      setExplored(explorePath[0].explored);
       setTotalDistance(totalDistance + explorePath[0].local_distance);
 
       const item = explorePath.shift();
@@ -166,6 +169,7 @@ export const MainVisualizer = () => {
       });
       if (stepsBack.length >= 1) {
         setVisited(stepsBack[0].visited);
+        setExplored(stepsBack[0].explored);
         setTotalDistance(distTotal);
       }
       setVisualGraph({
@@ -204,6 +208,7 @@ export const MainVisualizer = () => {
           return n;
         });
         setVisited(stepsBack[0].visited);
+        setExplored(stepsBack[0].explored);
         setTotalDistance(totalDistance - stepsBack[0].local_distance);
 
         const item = stepsBack.shift();
@@ -266,6 +271,8 @@ export const MainVisualizer = () => {
           <Flex marginBottom={"5px"} alignItems={"center"} paddingX={"10px"}>
             <Text marginRight="20px">Visitados: {visited}</Text>
             <Divider orientation="vertical" />
+            <Text marginX="20px">Explorados: {explored}</Text>
+            <Divider orientation="vertical" />
             <Text marginX="20px">Dist. total percorrida: {totalDistance}</Text>
             <Divider orientation="vertical" />
             {optimization ? (
@@ -285,7 +292,7 @@ export const MainVisualizer = () => {
           <GraphVisualizer showData={visualGraph} />
 
           <Flex justifyContent={"space-between"} marginY="20px" w="100%">
-            <Flex>
+            <Flex display={"none"}>
               <Button
                 onClick={showAllProcess}
                 marginRight="10px"

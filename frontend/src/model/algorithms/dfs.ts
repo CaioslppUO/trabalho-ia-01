@@ -89,6 +89,7 @@ export const dfs = (graph: Graph) => {
             local_distance: v.localDistance,
             total_distance: v.distance,
             visited: visited.length - 1,
+            explored: visited.length - 1,
           });
         }
 
