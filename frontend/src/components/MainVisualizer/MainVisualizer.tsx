@@ -27,10 +27,11 @@ export const MainVisualizer = () => {
     straightPath,
     distStraighPath,
     optimization,
+    distTotal,
   } = useContext(MainContext);
 
-  const [distTotal, setDistTotal] = useState(0);
   const [visited, setVisited] = useState(0);
+  const [totalDistance, setTotalDistance] = useState(0);
   const [stepsBack, setStepsBack] = useState<ExploreProps[]>([]);
   const [showDistStraightPath, setShowDistStraightPath] = useState(false);
 
@@ -71,7 +72,7 @@ export const MainVisualizer = () => {
     });
     if (stepsBack.length >= 1) {
       setVisited(stepsBack[0].visited);
-      setDistTotal(stepsBack[0].total_distance);
+      setTotalDistance(distTotal);
     }
 
     setVisualGraph({
@@ -115,7 +116,7 @@ export const MainVisualizer = () => {
         return n;
       });
       setVisited(explorePath[0].visited);
-      setDistTotal(explorePath[0].total_distance);
+      setTotalDistance(totalDistance + explorePath[0].local_distance);
 
       const item = explorePath.shift();
 
@@ -165,7 +166,7 @@ export const MainVisualizer = () => {
       });
       if (stepsBack.length >= 1) {
         setVisited(stepsBack[0].visited);
-        setDistTotal(stepsBack[0].total_distance);
+        setTotalDistance(distTotal);
       }
       setVisualGraph({
         nodes,
@@ -203,7 +204,7 @@ export const MainVisualizer = () => {
           return n;
         });
         setVisited(stepsBack[0].visited);
-        setDistTotal(stepsBack[0].total_distance);
+        setTotalDistance(totalDistance - stepsBack[0].local_distance);
 
         const item = stepsBack.shift();
 
@@ -265,7 +266,7 @@ export const MainVisualizer = () => {
           <Flex marginBottom={"5px"} alignItems={"center"} paddingX={"10px"}>
             <Text marginRight="20px">Visitados: {visited}</Text>
             <Divider orientation="vertical" />
-            <Text marginX="20px">Dist. total percorrida: {distTotal}</Text>
+            <Text marginX="20px">Dist. total percorrida: {totalDistance}</Text>
             <Divider orientation="vertical" />
             {optimization ? (
               <Text marginX="20px">
@@ -343,7 +344,7 @@ export const MainVisualizer = () => {
 
               <Flex alignItems={"center"}>
                 <Text fontSize={"10px"} marginX="5px">
-                  Caminho do algoritmo
+                  Solução encontrada
                 </Text>
                 <Box
                   w="30px"

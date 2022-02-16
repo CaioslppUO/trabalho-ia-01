@@ -66,6 +66,7 @@ export type MainObject = {
   algorithm: "dfs" | "a_star";
   setAlgorithm: (a: "dfs" | "a_star") => void;
   execute: () => void;
+  distTotal: number;
 };
 
 /**
@@ -85,6 +86,7 @@ export function MainContextProvider(props: ComponentProps) {
   const [endVertex, setEndVertex] = useState("");
   const [optimization, setOptimization] = useState(true);
   const [distStraighPath, setDistStraightPath] = useState(0);
+  const [distTotal, setDistTotal] = useState(0);
   const [algorithm, setAlgorithm] = useState<"dfs" | "a_star">("a_star");
 
   const [straightPath, setStraightPath] = useState<StraightPathProps[]>([]);
@@ -123,7 +125,13 @@ export function MainContextProvider(props: ComponentProps) {
         algorithm === "a_star"
           ? a_star(MainGraph).run(startVertex, endVertex, optimization)
           : dfs(MainGraph).run(startVertex, endVertex);
-      console.log(result);
+
+      // console.log(result);
+      let d = 0;
+      result.output.forEach((j) => {
+        d = d + j.local_distance;
+      });
+      setDistTotal(d);
       setExplorePath(result.output);
       setStraightPath(result.straight_path as any);
       setDistStraightPath(result.distance);
@@ -217,6 +225,7 @@ export function MainContextProvider(props: ComponentProps) {
         algorithm,
         setAlgorithm,
         execute,
+        distTotal,
       }}
     >
       {props.children}
